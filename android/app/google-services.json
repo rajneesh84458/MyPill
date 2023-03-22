@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "102714761083",
+    "project_id": "mypill-bc7c4",
+    "storage_bucket": "mypill-bc7c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102714761083:android:ea7ee325b7bfe7651a27de",
+        "android_client_info": {
+          "package_name": "com.mypill"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102714761083-6vhf6peastikrrfgcke13558t8ip09tk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBKo3TFO2KSDOjlU-Ig6fa1RWF-cCijR0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102714761083-6vhf6peastikrrfgcke13558t8ip09tk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
