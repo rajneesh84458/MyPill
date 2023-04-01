@@ -23,7 +23,7 @@ import {darkTheme, lightTheme} from '../theme/themeFile';
 import LoadingScreen from '../components/LoadingScreen';
 
 export default function LoginScreen({navigation}) {
-  const [email, setEmail] = useState('raj@test.com');
+  const [email, setEmail] = useState('arun@test.com');
   const [password, setPassword] = useState('123456');
   const [showVisiblity, setShowVisiblity] = useState(false);
   const [errortext, setErrortext] = useState('');
@@ -172,7 +172,18 @@ export default function LoginScreen({navigation}) {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <CustomButton title="Login" onPress={handleLogin} />
+            <CustomButton 
+            buttonColor={COLORS.PRIMARY_COLOR}
+             buttonStyle={{
+          width: '80%',
+          alignSelf: 'center',
+        
+          borderRadius: 6,
+          marginBottom:20 
+        }}
+        onPress={handleLogin}
+        textStyle={{fontSize: 20}}
+             title="Login"  />
           </View>
         )}
         <Pressable onPress={() => navigation.navigate('Register')}>
@@ -211,6 +222,7 @@ const styles = StyleSheet.create({
     width: setWidth(70),
     height: setHeight(25),
     resizeMode: 'cover',
+    borderRadius:10
   },
   box1: {
     height: setHeight(40),

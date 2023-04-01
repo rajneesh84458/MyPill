@@ -27,8 +27,10 @@ import moment from 'moment';
 import { AuthContext } from '../AuthContext';
 import { darkTheme, lightTheme } from '../theme/themeFile';
 import CustomButton from './CustomButton';
+import KeepAwake from 'react-native-keep-awake';
+import { saveDataToFirestore, saveToFireStore } from '../globalFunction/globalFile';
 
-console.log(uuid.v4());
+
 
 const AddPill = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
@@ -109,6 +111,8 @@ const AddPill = ({navigation}) => {
         channelName: 'Test',
         soundName: 'adventure.mp3',
         importance: Importance.HIGH,
+        vibrate: true,
+
       },
       created => console.log(`createChannel returned '${created}'`),
     );
@@ -140,9 +144,11 @@ const AddPill = ({navigation}) => {
   
         repeatType: 'day',
         timeStatus: timeStatus,
-        repeatTime: 2,
+        repeatTime: 1,
       });
+      KeepAwake.activate();
      }
+
      else {
       console.log("ios platform")
      }
@@ -170,7 +176,8 @@ const AddPill = ({navigation}) => {
 
   const addProducts = async () => {
    
-    
+    let chosenDate =moment(selectedDate).format('YYYY-MM-DD')
+    let chosenTime = moment(selectedDate).format('h:mm A')
     const products = {
       id: uuid.v4(),
       name: pillName,
@@ -179,33 +186,32 @@ const AddPill = ({navigation}) => {
       pillType: pillType,
       pillImage: pillImage || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
       choosenImage: imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
-      notificationDate: moment(selectedDate).format('YYYY-MM-DD'),
+      notificationDate: chosenDate,
       day: weekday,
-      notifyTime:moment(selectedDate).format('h:mm A'),
-      notificationTime: selectedDate.toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true,
-      }),
+      notifyTime:chosenTime,
+      uid:user.uid
+    
     };
 
     // await storeData('products', products);
-    try {
-      let productsArray = await AsyncStorage.getItem('products');
-      if (productsArray) {
-        productsArray = JSON.parse(productsArray);
-        productsArray.push(products);
-        await AsyncStorage.setItem('products', JSON.stringify(productsArray));
-        console.log('data Saved ');
-      } else {
-        productsArray = [];
-        productsArray.push(products);
-        await AsyncStorage.setItem('products', JSON.stringify(productsArray));
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   let productsArray = await AsyncStorage.getItem('products');
+    //   if (productsArray) {
+    //     productsArray = JSON.parse(productsArray);
+    //     productsArray.push(products);
+    //     await AsyncStorage.setItem('products', JSON.stringify(productsArray));
+    //     console.log('data Saved ');
+    //   } else {
+    //     productsArray = [];
+    //     productsArray.push(products);
+    //     await AsyncStorage.setItem('products', JSON.stringify(productsArray));
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
     handleScheduleNotify();
+    // saveDataToFirestore(uuid.v4(),pillName,foodStatus,timeStatus,pillType,pillImage,imageUri,chosenDate,weekday,chosenTime)
+         saveDataToFirestore(products)
     navigation.navigate('Home', products);
   };
 
@@ -218,9 +224,8 @@ const AddPill = ({navigation}) => {
   };
 
   const handleConfirm = date => {
-    console.log('A date has been picked: ', date);
-
-    setSelectedDate(date);
+   setSelectedDate(date);
+   
     hideDatePicker();
   };
 
@@ -282,7 +287,7 @@ const AddPill = ({navigation}) => {
           placeholder="Enter Pill Name"
           value={pillName}
           onChangeText={text => setPillName(text)}
-          style={[styles.pilltabStyle,{color:theme.textColor}]}
+          style={[styles.pilltabStyle,{color:theme.textColor,backgroundColor:theme.backgroundColor}]}
         />
       </View>
 
@@ -409,16 +414,17 @@ const AddPill = ({navigation}) => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            // justifyContent: 'space-between',
           }}>
           <Pressable
             style={{
               margin: 10,
               flexDirection: 'row',
-              width: 280,
+              // width: 200,
               height: 60,
               backgroundColor: '#f4f4f4',
               alignItems: 'center',
+              paddingHorizontal:10
             }}>
             <Image
               source={{
@@ -430,17 +436,17 @@ const AddPill = ({navigation}) => {
                 resizeMode: 'cover',
                 marginLeft: 5,
               }}
-            />
+            /> 
 
             <Text style={{fontSize: 20, paddingHorizontal: 10}}>
               {selectedTime}
-            </Text>
-            <Text style={{textAlign: 'right', paddingLeft: 30}}>
+            </Text> 
+             <Text style={{textAlign: 'right', paddingLeft: 30}}>
               {selectedDate.toDateString()}
-            </Text>
-          </Pressable>
+            </Text> 
+        </Pressable>
 
-          <Pressable
+        <Pressable
             onPress={showDatePicker}
             style={{
               width: 60,
@@ -453,6 +459,7 @@ const AddPill = ({navigation}) => {
             }}>
             <Text style={{fontSize: 20}}>+</Text>
           </Pressable>
+         
         </View>
       </View>
 
@@ -529,12 +536,13 @@ flex:1
   pilltabStyle: {
     width: '95%',
     height: 40,
-    backgroundColor: '#f4f4f4',
+     backgroundColor: '#f4f4f4',
     marginLeft: 10,
     fontSize: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: 10,
+    
   },
   foodPillStyle: {
     width: 100,

@@ -35,7 +35,7 @@
 
 
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
 import {setHeight, setWidth} from './globalDimension';
 import {COLORS} from '../utilities/medicineTab';
 const CustomButton = ({
@@ -47,7 +47,7 @@ const CustomButton = ({
   textStyle,
 }) => {
   return (
-    <TouchableOpacity
+    <Pressable
       style={{
         ...styles.container,
         ...buttonStyle,
@@ -58,7 +58,7 @@ const CustomButton = ({
         style={{...styles.title, ...textStyle, color: titleColor || '#fff'}}>
         {title}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -66,8 +66,8 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
-    backgroundColor: '#512DA8',
+  
+    backgroundColor: COLORS.PRIMARY_COLOR,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',

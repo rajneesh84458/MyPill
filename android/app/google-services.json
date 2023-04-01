@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:102714761083:android:ea7ee325b7bfe7651a27de",
+        "mobilesdk_app_id": "1:102714761083:android:b4ad3878a4e7d4361a27de",
         "android_client_info": {
           "package_name": "com.mypill"
         }
@@ -29,6 +29,13 @@
             {
               "client_id": "102714761083-6vhf6peastikrrfgcke13558t8ip09tk.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "102714761083-3hpiuoh6trfbt76gbth6e1ooulgqkh0u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.MyPill"
+              }
             }
           ]
         }

@@ -1,5 +1,9 @@
 import {PermissionsAndroid} from 'react-native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import uuid from 'react-native-uuid';
+
 
 const handlePhotoClicker = setFilePath => {
   const options = {
@@ -26,7 +30,7 @@ const handlePhotoClicker = setFilePath => {
       // You can also display the image using data:
       // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-      setFilePath(source.uri);
+      setFilePath(source);
       // setSelectedImage(source);
     }
   });
@@ -117,4 +121,21 @@ const handleCameraPicker = async (type, setImageData) => {
   }
 };
 
-export {handlePhotoClicker, handleCameraPicker};
+
+
+
+const saveDataToFirestore = async (data) => {
+  try {
+    const currentUser = auth().currentUser;
+    console.log("current user",currentUser)
+    const response = await firestore().collection('userMedicine')
+  .add(data);
+    console.log('Data saved successfully to Firestore with ID:========', response);
+  } catch (error) {
+    console.error('Error saving data to Firestore:', error);
+  }
+};
+
+export {handlePhotoClicker, handleCameraPicker,saveDataToFirestore};
+
+

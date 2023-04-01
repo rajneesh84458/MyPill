@@ -31,7 +31,7 @@ export const AuthProvider = ({children, navigation}) => {
   }, []);
 
   const signUp = async (email, password, userName, mobile, filePath) => {
-    console.log('mobile', mobile);
+    
     setIsLoading(true);
     try {
       await auth().createUserWithEmailAndPassword(email, password);

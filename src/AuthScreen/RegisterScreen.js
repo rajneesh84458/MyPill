@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import storage from '@react-native-firebase/storage';
 import {handlePhotoClicker} from '../globalFunction/globalFile';
 import {COLORS} from '../utilities/medicineTab';
 import CustomButton from '../components/CustomButton';
@@ -24,6 +24,7 @@ import {setHeight, setWidth} from '../components/globalDimension';
 
 import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -34,9 +35,9 @@ const RegisterScreen = ({navigation}) => {
   const [showVisiblity, setShowVisiblity] = useState(false);
   const [showVisiblityConfirm, setShowVisiblityConfirm] = useState(false);
   const [errortext, setErrortext] = useState('');
-  const [loading, setLoading] = useState(false);
+ 
   const [filePath, setFilePath] = useState('');
-  const [userToken, setUserToken] = useState('');
+
   const [uploading, setUploading] = useState(false);
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
@@ -172,38 +173,56 @@ const RegisterScreen = ({navigation}) => {
       signUp(email, password, userName, mobile, filePath);
     }
   };
-  const setFilePicker = () => {
-    handlePhotoClicker(setFilePath);
-    // uploadImage(filePath);
+
+ const selectPhotoTapped = () => {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      allowEditing: true,
+
+      storageOptions: {
+        skipBackup: true,
+      },
+    };
+
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const {uri} = response.assets[0];
+        const filename = uri.substring(uri.lastIndexOf('/') + 1);
+        const uploadUri =
+          Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+        setUploading(true);
+
+        // setTransferred(0);
+
+        const task = storage().ref(filename).putFile(uploadUri);
+
+        // set progress state
+        task.on('state_changed', snapshot => {});
+        try {
+          await task;
+        } catch (e) {
+          console.error(e);
+        }
+        setUploading(false);
+
+        await storage()
+          .ref(filename)
+          .getDownloadURL()
+          .then(downloadURL => {
+            console.log('++++++++photodownloadURL', downloadURL);
+            setFilePath(downloadURL);
+          });
+      }
+    });
   };
-
-  // const uploadImage = async filePath => {
-  //   const filename = filePath.substring(filePath.lastIndexOf('/') + 1);
-  //   const uploadUri =
-  //     Platform.OS === 'ios' ? filePath.replace('file://', '') : filePath;
-  //   setUploading(true);
-
-  //   // setTransferred(0);
-
-  //   const task = storage().ref(filename).putFile(uploadUri);
-
-  //   // set progress state
-  //   task.on('state_changed', snapshot => {});
-  //   try {
-  //     await task;
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  //   setUploading(false);
-
-  //   await storage()
-  //     .ref(filename)
-  //     .getDownloadURL()
-  //     .then(downloadURL => {
-  //       console.log('++++++++photodownloadURL', downloadURL);
-  //       setFilePath(downloadURL);
-  //     });
-  // };
 
   const showImage = () => {
     console.log('+++++++++=', filePath);
@@ -227,6 +246,8 @@ const RegisterScreen = ({navigation}) => {
     );
   };
 
+
+
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
@@ -248,7 +269,9 @@ const RegisterScreen = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-            onPress={setFilePicker}>
+           onPress={selectPhotoTapped}
+           
+            >
             {showImage()}
           </TouchableOpacity>
 
@@ -432,7 +455,18 @@ const RegisterScreen = ({navigation}) => {
             {isLoading ? (
               <LoadingScreen />
             ) : (
-              <CustomButton title="Register" onPress={handleRegister} />
+              <CustomButton 
+              buttonColor={COLORS.PRIMARY_COLOR}
+               buttonStyle={{
+            width: '80%',
+            alignSelf: 'center',
+          
+            borderRadius: 6,
+            marginBottom:20 
+          }}
+          onPress={handleRegister}
+          textStyle={{fontSize: 20}}
+               title="Register"  />
             )}
           </View>
         </KeyboardAvoidingView>

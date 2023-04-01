@@ -13,3 +13,26 @@ export const darkTheme = {
   borderColor: '#FFFFFF',
   // other styles and colors for the dark theme
 };
+
+
+const lightStyles = {
+  container: {
+    backgroundColor: '#FFFFFF',
+    color: '#000000',
+  },
+  text: {
+    color: '#000000',
+  },
+};
+
+const darkStyles = {
+  container: {
+    backgroundColor: '#000000',
+    color: '#FFFFFF',
+  },
+  text: {
+    color: '#FFFFFF',
+  },
+};
+
+export {lightStyles,darkStyles}

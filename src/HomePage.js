@@ -8,17 +8,24 @@ import {
   Image,
   RefreshControl,
   ToastAndroid,
+  Pressable,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {COLORS} from './utilities/medicineTab';
-import {getData} from './utilities/asyncstorage';
+import {clearData, getData} from './utilities/asyncstorage';
 import CalendarStrip from 'react-native-calendar-strip';
 import {AuthContext} from './AuthContext';
 import { darkTheme, lightTheme } from './theme/themeFile';
+import CustomButton from './components/CustomButton';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import firestore from '@react-native-firebase/firestore';
+import LoadingScreen from './components/LoadingScreen';
 
 const HomePage = ({route, navigation}) => {
   const [selectedDate, setSelectedDate] = useState(moment());
+  const [docid,setDocid]=useState(null)
   const {signIn, isLoading, isDarkTheme,setIsLoading} = useContext(AuthContext);
 
   console.log('routeparams', route.params);
@@ -30,60 +37,102 @@ const HomePage = ({route, navigation}) => {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const {user} = useContext(AuthContext);
-  console.log('Getting usr', user);
+  console.log('Getting usr', user.uid);
+
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    if (data.length < 10) {
-      try {
-        const productsArray = await AsyncStorage.getItem('products');
-
-        console.log('+++++ fetchProducts', productsArray);
-        if (productsArray) {
-          const list = JSON.parse(productsArray);
-          if (list.length > 0) {
-            setData(list);
-            setIsLoading(false);
-            setRefreshing(false);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    } else {
-      ToastAndroid.show('No more new data available', ToastAndroid.SHORT);
-      setRefreshing(false);
-    }
+    fetchMedicines()
   }, [refreshing]);
+  
+
+
+  // const fetchProducts = async () => {
+  //   try {
+  //     const productsArray = await getData('products');
+
+  //     console.log('+++++ fetchProducts', productsArray);
+  //     if (productsArray) {
+  //       const list = productsArray;
+  //       if (list.length > 0) {
+  //         setData(list);
+  //       }
+  //       setIsLoading(false);
+  //       setRefreshing(false);
+  //       console.log('++++++++++++++++++++++', data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, [route.params]);
+
+
+
+const fetchMedicines =()=>{
+  setIsLoading(true)
+  const userId = user.uid; // Replace with the user ID you want to fetch
+
+const usersRef = firestore().collection('userMedicine');
+
+const query = usersRef.where('uid', '==', userId);
+
+query.get().then(querySnapshot => {
+  const newData = [];
+  querySnapshot.forEach((doc) => {
+    setDocid(doc.id)
+          newData.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        setData(newData);
+        setIsLoading(false)
+        setRefreshing(false);
+        console.log("=============",data)
+  
+})
+}
+  
+  useEffect(() => {
+    const unsubscribe = fetchMedicines()
+    return unsubscribe;
+  }, []);
+  
+  const deleteTile = () => {
+    Alert.alert('Delete !!', 'Do you want it delete it ?.', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: ()=>handleDelete()},
+    ]);
+    
+  };
+
+  const handleDelete =  () => {
+    firestore()
+  .collection('userMedicine')
+  .doc(docid)
+  .delete()
+  .then(() => {
+    ToastAndroid.show('Deleted Successfully !!', ToastAndroid.SHORT);
+  });
+  fetchMedicines()
+  };
+ 
+  
   const filteredData = data.filter(
     item => item.notificationDate === selectedDate?.format('YYYY-MM-DD'),
   );
-  console.log('filteredData', filteredData);
 
-  const fetchProducts = async () => {
-    try {
-      const productsArray = await getData('products');
-
-      console.log('+++++ fetchProducts', productsArray);
-      if (productsArray) {
-        const list = productsArray;
-        if (list.length > 0) {
-          setData(list);
-        }
-        setIsLoading(false);
-        setRefreshing(false);
-        console.log('++++++++++++++++++++++', data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, [route.params]);
 
   return (
     <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+
       <View
         style={{
           // backgroundColor: theme.backgroundColor,
@@ -140,15 +189,20 @@ const HomePage = ({route, navigation}) => {
         onDateSelected={date => setSelectedDate(date)}
         //  minDate={selectedDate}
       />
+      
+      
+   
 
-      {filteredData.length > 0 ? (
+      {   isLoading ? <LoadingScreen/>
+      : filteredData.length > 0 ? (
+        
         <FlatList
          style={{flex:1}}
           data={filteredData}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => {
             return (
-              <View style={[styles.cardContainer,{backgroundColor:theme.backgroundColor}]}>
+              <TouchableOpacity onPress={()=>deleteTile()} style={[styles.cardContainer,{backgroundColor:theme.backgroundColor}]}>
                 <View style={styles.ImageContainer}>
                   <Image
                     source={{uri: item.choosenImage}}
@@ -172,12 +226,13 @@ const HomePage = ({route, navigation}) => {
 
                   <View
                     style={{
-                      width: 130,
+                      width: 140,
                       height: 80,
 
                       alignItems: 'flex-end',
                 
-                      marginLeft: 10,
+                      // marginLeft: 20,
+                      // backgroundColor:'red'
                      
                     
                     }}>
@@ -191,12 +246,14 @@ const HomePage = ({route, navigation}) => {
                     </Text>
                     <Image
                     source={{uri: item.pillImage}}
-                    style={[[styles.imageStyle,{width:30,height:30,resizeMode:'contain', paddingVertical:5}]]}
+                    style={{width:30,height:30,marginTop:10,resizeMode:'center',padding:5}}
                   />
-                    <Text style={{fontSize: 12, paddingVertical:10,color:theme.textColor, fontFamily: 'Poppins-Regular'}}>{item.pillType} </Text>
+                    {/* <Text style={{fontSize: 12, paddingVertical:10,color:theme.textColor, fontFamily: 'Poppins-Regular'}}>{item.pillType} </Text> */}
+                    
                   </View>
+                  
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           }}
           refreshControl={
@@ -204,6 +261,7 @@ const HomePage = ({route, navigation}) => {
           }
         />
       ) : (
+
         <View style={{ flex:1, justifyContent:'center',alignItems:'center',}}>
           <Image
             source={{
@@ -215,12 +273,12 @@ const HomePage = ({route, navigation}) => {
             Data not found !!
           </Text>
         </View>
+      
       )}
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Add Pill')}
-        style={styles.touchableOpacityStyle}>
-        <Text style={{color: '#fff',fontFamily:'NunitoSans-Bold'}}>AddPill</Text>
-      </TouchableOpacity>
+      
+  
+      <CustomButton buttonColor={COLORS.PRIMARY_COLOR}  onPress={() => navigation.navigate('Add Pill')}
+      title="Add Pill" buttonStyle={styles.touchableOpacityStyle}/>
     </View>
   );
 };
@@ -234,6 +292,16 @@ const styles = StyleSheet.create({
    
   },
   
+  touchableOpacityStyle: {
+    position: 'absolute',
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 20,
+    borderRadius:50
+  },
   cardContainer: {
 
     height: 100,
