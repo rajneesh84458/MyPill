@@ -22,8 +22,10 @@ import CustomButton from './components/CustomButton';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import firestore from '@react-native-firebase/firestore';
 import LoadingScreen from './components/LoadingScreen';
+import { useIsFocused } from '@react-navigation/native';
 
 const HomePage = ({route, navigation}) => {
+  const isFocused = useIsFocused()
   const [selectedDate, setSelectedDate] = useState(moment());
   const [docid,setDocid]=useState(null)
   const {signIn, isLoading, isDarkTheme,setIsLoading} = useContext(AuthContext);
@@ -99,7 +101,8 @@ query.get().then(querySnapshot => {
   useEffect(() => {
     const unsubscribe = fetchMedicines()
     return unsubscribe;
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused]);
   
   const deleteTile = () => {
     Alert.alert('Delete !!', 'Do you want it delete it ?.', [
