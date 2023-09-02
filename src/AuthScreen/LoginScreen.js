@@ -11,7 +11,6 @@ import {
   Alert,
 } from 'react-native';
 
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -21,6 +20,7 @@ import {setHeight, setWidth} from '../components/globalDimension';
 import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
 import LoadingScreen from '../components/LoadingScreen';
+import CustomTextInput from '../components/CustomTextInput';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('arun@test.com');
@@ -48,56 +48,6 @@ export default function LoginScreen({navigation}) {
       signIn(email, password);
     }
   };
-  // const userLogin = () => {
-  //   setErrortext('');
-  //   if (!email) {
-  //     alert('Please fill Email');
-  //     return;
-  //   }
-  //   if (!password) {
-  //     alert('Please fill Password');
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   auth()
-  //     .signInWithEmailAndPassword(email, password)
-  //     .then(user => {
-  //       console.log('+++++Login', user);
-  //       setLoading(false);
-  //       // If server response message same as Data Matched
-  //       if (user) navigation.navigate('Home');
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //       if (error.code === 'auth/invalid-email') {
-  //         setErrortext('Invalid email');
-  //         setLoading(false);
-  //       }
-  //       if (error.code === 'auth/wrong-password') {
-  //         setErrortext('Password invalid !!');
-  //         setLoading(false);
-  //       } else if (error.code === 'auth/user-not-found') {
-  //         setErrortext('No User Found');
-  //         setLoading(false);
-  //       }
-  //     });
-  // };
-
-  // async function saveTokenToDatabase(token) {
-  //   // Assume user is already signed in
-  //   const userId = auth().currentUser.uid;
-
-  //   // Add the token to the users data store
-  //   await firestore()
-  //     .collection('users')
-  //     .doc(userId)
-  //     .update({
-  //       tokens: firestore.FieldValue.arrayUnion(token),
-  //     });
-  // }
-
-
 
   return (
     <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
@@ -111,23 +61,20 @@ export default function LoginScreen({navigation}) {
           />
           <Text style={[styles.text, {color: theme.textColor}]}>
             Take Your Pills Carefully !{' '}
-
           </Text>
-
         </View>
         <View
           style={[
             styles.sectionStyle,
             {backgroundColor: theme.backgroundColor},
           ]}>
-          <TextInput
+          <CustomTextInput
             autoCapitalize="none"
             placeholder="Email"
             value={email}
-            onChangeText={text => setEmail(text)}
-            style={[styles.inputStyle, {color: theme.textColor}]}
+            onChangeText={setEmail}
+            style={{color: theme.textColor}}
           />
-
           <Ionicons
             style={styles.touachableButton}
             name="mail"
@@ -141,13 +88,13 @@ export default function LoginScreen({navigation}) {
             styles.sectionStyle,
             {backgroundColor: theme.backgroundColor},
           ]}>
-          <TextInput
+          <CustomTextInput
             autoCapitalize="none"
             placeholder="password"
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={setPassword}
             secureTextEntry={showVisiblity}
-            style={[styles.inputStyle, {color: theme.textColor}]}
+            style={{color: theme.textColor}}
           />
           <TouchableOpacity
             activeOpacity={0.8}
@@ -160,11 +107,10 @@ export default function LoginScreen({navigation}) {
             )}
           </TouchableOpacity>
         </View>
-
         <Text style={{color: 'red', textAlign: 'center'}}>{errortext}</Text>
 
         {isLoading ? (
-          <LoadingScreen/>
+          <LoadingScreen />
         ) : (
           <View
             style={{
@@ -172,18 +118,19 @@ export default function LoginScreen({navigation}) {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <CustomButton 
-            buttonColor={COLORS.PRIMARY_COLOR}
-             buttonStyle={{
-          width: '80%',
-          alignSelf: 'center',
-        
-          borderRadius: 6,
-          marginBottom:20 
-        }}
-        onPress={handleLogin}
-        textStyle={{fontSize: 20}}
-             title="Login"  />
+            <CustomButton
+              buttonColor={COLORS.PRIMARY_COLOR}
+              buttonStyle={{
+                width: '80%',
+                alignSelf: 'center',
+
+                borderRadius: 6,
+                marginBottom: 20,
+              }}
+              onPress={handleLogin}
+              textStyle={{fontSize: 20}}
+              title="Login"
+            />
           </View>
         )}
         <Pressable onPress={() => navigation.navigate('Register')}>
@@ -200,9 +147,7 @@ export default function LoginScreen({navigation}) {
               Register
             </Text>
           </Text>
-        
         </Pressable>
-        
       </KeyboardAvoidingView>
     </View>
   );
@@ -222,7 +167,7 @@ const styles = StyleSheet.create({
     width: setWidth(70),
     height: setHeight(25),
     resizeMode: 'cover',
-    borderRadius:10
+    borderRadius: 10,
   },
   box1: {
     height: setHeight(40),

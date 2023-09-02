@@ -14,7 +14,6 @@ export const darkTheme = {
   // other styles and colors for the dark theme
 };
 
-
 const lightStyles = {
   container: {
     backgroundColor: '#FFFFFF',
@@ -35,4 +34,4 @@ const darkStyles = {
   },
 };
 
-export {lightStyles,darkStyles}
+export {lightStyles, darkStyles};

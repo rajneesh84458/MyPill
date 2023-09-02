@@ -7,12 +7,10 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  TextInput,
   ActivityIndicator,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect, useId, useContext} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState, useEffect, useContext} from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import PushNotification, {Importance} from 'react-native-push-notification';
 import {
@@ -24,13 +22,12 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import uuid from 'react-native-uuid';
 import moment from 'moment';
-import { AuthContext } from '../AuthContext';
-import { darkTheme, lightTheme } from '../theme/themeFile';
+import {AuthContext} from '../AuthContext';
+import {darkTheme, lightTheme} from '../theme/themeFile';
 import CustomButton from './CustomButton';
 import KeepAwake from 'react-native-keep-awake';
-import { saveDataToFirestore, saveToFireStore } from '../globalFunction/globalFile';
-
-
+import {saveDataToFirestore} from '../globalFunction/globalFile';
+import CustomTextInput from './CustomTextInput';
 
 const AddPill = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
@@ -42,8 +39,8 @@ const AddPill = ({navigation}) => {
   const [timeStatus, setTimeStatus] = useState('');
   const [pillType, setPillType] = useState('');
   const [pillImage, setPillImage] = useState('');
- const [dumyLoading,setLoading]=useState(true)
-  const { isLoading, isDarkTheme,setIsLoading} = useContext(AuthContext);
+  const [dumyLoading, setLoading] = useState(true);
+  const {isDarkTheme} = useContext(AuthContext);
   const theme = isDarkTheme ? darkTheme : lightTheme;
 
   const selectedPill = item => {
@@ -80,22 +77,12 @@ const AddPill = ({navigation}) => {
     // .finally(close);
   };
 
-  // const addNewProduct = product => {
-  //   console.log('product', product);
-  //   addProducts(product);
-  //   setProducts([...products, product]);
-
-  //   handleScheduleNotify();
-  //   navigation.goBack();
-  //   console.log('Schedule Successfully');
-  // };
-
   const callingSometime = () => {
     if (dumyLoading) {
-        if(!pillName){
-          return Alert.alert('Enter Pill Name')
-        }
-      setLoading(false)
+      if (!pillName) {
+        return Alert.alert('Enter Pill Name');
+      }
+      setLoading(false);
     }
     setTimeout(() => {
       addProducts();
@@ -112,7 +99,6 @@ const AddPill = ({navigation}) => {
         soundName: 'adventure.mp3',
         importance: Importance.HIGH,
         vibrate: true,
-
       },
       created => console.log(`createChannel returned '${created}'`),
     );
@@ -130,7 +116,7 @@ const AddPill = ({navigation}) => {
   // };
 
   const handleScheduleNotify = () => {
-     if(Platform.OS =='android'){
+    if (Platform.OS == 'android') {
       PushNotification.localNotificationSchedule({
         channelId: 'default',
         title: pillName,
@@ -139,20 +125,18 @@ const AddPill = ({navigation}) => {
           imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
         date: new Date(selectedDate),
         smallIcon: pillImage,
-      
+
         allowWhileIdle: true,
-  
+
         repeatType: 'day',
         timeStatus: timeStatus,
         repeatTime: 1,
       });
       KeepAwake.activate();
-     }
+    } else {
+      console.log('ios platform');
+    }
 
-     else {
-      console.log("ios platform")
-     }
-   
     console.log('first', selectedDate);
   };
 
@@ -175,43 +159,27 @@ const AddPill = ({navigation}) => {
   let weekday = weekdays[date.getDay()];
 
   const addProducts = async () => {
-   
-    let chosenDate =moment(selectedDate).format('YYYY-MM-DD')
-    let chosenTime = moment(selectedDate).format('h:mm A')
+    let chosenDate = moment(selectedDate).format('YYYY-MM-DD');
+    let chosenTime = moment(selectedDate).format('h:mm A');
     const products = {
       id: uuid.v4(),
       name: pillName,
       foodStatus: foodStatus,
       timeStatus: timeStatus,
       pillType: pillType,
-      pillImage: pillImage || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
-      choosenImage: imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
+      pillImage:
+        pillImage || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
+      choosenImage:
+        imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
       notificationDate: chosenDate,
       day: weekday,
-      notifyTime:chosenTime,
-      uid:user.uid
-    
+      notifyTime: chosenTime,
+      uid: user.uid,
     };
 
-    // await storeData('products', products);
-    // try {
-    //   let productsArray = await AsyncStorage.getItem('products');
-    //   if (productsArray) {
-    //     productsArray = JSON.parse(productsArray);
-    //     productsArray.push(products);
-    //     await AsyncStorage.setItem('products', JSON.stringify(productsArray));
-    //     console.log('data Saved ');
-    //   } else {
-    //     productsArray = [];
-    //     productsArray.push(products);
-    //     await AsyncStorage.setItem('products', JSON.stringify(productsArray));
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
     handleScheduleNotify();
     // saveDataToFirestore(uuid.v4(),pillName,foodStatus,timeStatus,pillType,pillImage,imageUri,chosenDate,weekday,chosenTime)
-         saveDataToFirestore(products)
+    saveDataToFirestore(products);
     navigation.navigate('Home', products);
   };
 
@@ -224,14 +192,16 @@ const AddPill = ({navigation}) => {
   };
 
   const handleConfirm = date => {
-   setSelectedDate(date);
-   
+    setSelectedDate(date);
+
     hideDatePicker();
   };
 
-  const selectedTime =moment(selectedDate).format('h:mm A')
+  const selectedTime = moment(selectedDate).format('h:mm A');
   return (
-    <ScrollView style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <TouchableOpacity
         style={{margin: 20}}
         onPress={() => navigation.goBack()}>
@@ -239,7 +209,12 @@ const AddPill = ({navigation}) => {
           source={{
             uri: 'https://cdn-icons-png.flaticon.com/512/130/130882.png',
           }}
-          style={{width: 20, height: 20, resizeMode: 'cover',tintColor:theme.borderColor}}
+          style={{
+            width: 20,
+            height: 20,
+            resizeMode: 'cover',
+            tintColor: theme.borderColor,
+          }}
         />
       </TouchableOpacity>
       <View
@@ -272,28 +247,34 @@ const AddPill = ({navigation}) => {
               height: 80,
               borderRadius: 40,
               resizeMode: 'contain',
-             
             }}
           />
         </TouchableOpacity>
-        <Text style={{fontSize: 14, marginVertical: 5,color:theme.textColor}}>
+        <Text style={{fontSize: 14, marginVertical: 5, color: theme.textColor}}>
           Add you medicine photo
         </Text>
       </View>
       <View style={{height: 100, marginTop: 20}}>
-        <Text style={[styles.headingStyle,{color:theme.textColor}]}>Enter the name of your medicine</Text>
-        <TextInput
+        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
+          Enter the name of your medicine
+        </Text>
+        <CustomTextInput
           placeholderTextColor="#ccc"
           placeholder="Enter Pill Name"
           value={pillName}
-          onChangeText={text => setPillName(text)}
-          style={[styles.pilltabStyle,{color:theme.textColor,backgroundColor:theme.backgroundColor}]}
+          onChangeText={setPillName}
+          style={{
+            color: theme.textColor,
+            backgroundColor: theme.backgroundColor,
+          }}
         />
       </View>
 
       {/* food and Pills */}
       <View style={{height: 120}}>
-      <Text style={[styles.headingStyle,{color:theme.textColor}]}>When would you take your dose ?</Text>
+        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
+          When would you take your dose ?
+        </Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -326,7 +307,9 @@ const AddPill = ({navigation}) => {
         </ScrollView>
       </View>
       <View>
-      <Text style={[styles.headingStyle,{color:theme.textColor}]}>Choose a medicine form</Text>
+        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
+          Choose a medicine form
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{margin: 10, flexDirection: 'row'}}>
             {tabData.map((item, index) => {
@@ -371,7 +354,9 @@ const AddPill = ({navigation}) => {
         </ScrollView>
       </View>
       {/* schedule time  */}
-      <Text style={[styles.headingStyle,{color:theme.textColor}]}>Choose a desired Time</Text>
+      <Text style={[styles.headingStyle, {color: theme.textColor}]}>
+        Choose a desired Time
+      </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{}}>
         {timeOfDay.map(item => {
           return (
@@ -409,7 +394,9 @@ const AddPill = ({navigation}) => {
       />
 
       <View style={{height: 120}}>
-      <Text style={[styles.headingStyle,{color:theme.textColor}]}>Notification</Text>
+        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
+          Notification
+        </Text>
         <View
           style={{
             flex: 1,
@@ -424,7 +411,7 @@ const AddPill = ({navigation}) => {
               height: 60,
               backgroundColor: '#f4f4f4',
               alignItems: 'center',
-              paddingHorizontal:10
+              paddingHorizontal: 10,
             }}>
             <Image
               source={{
@@ -436,17 +423,17 @@ const AddPill = ({navigation}) => {
                 resizeMode: 'cover',
                 marginLeft: 5,
               }}
-            /> 
+            />
 
             <Text style={{fontSize: 20, paddingHorizontal: 10}}>
               {selectedTime}
-            </Text> 
-             <Text style={{textAlign: 'right', paddingLeft: 30}}>
+            </Text>
+            <Text style={{textAlign: 'right', paddingLeft: 30}}>
               {selectedDate.toDateString()}
-            </Text> 
-        </Pressable>
+            </Text>
+          </Pressable>
 
-        <Pressable
+          <Pressable
             onPress={showDatePicker}
             style={{
               width: 60,
@@ -459,12 +446,10 @@ const AddPill = ({navigation}) => {
             }}>
             <Text style={{fontSize: 20}}>+</Text>
           </Pressable>
-         
         </View>
       </View>
 
-    
-        {/* <Pressable
+      {/* <Pressable
           onPress={handleLocalNotification}
           style={{
             width: 60,
@@ -476,13 +461,13 @@ const AddPill = ({navigation}) => {
           }}>
           <Text style={{fontSize: 20}}>Test</Text>
         </Pressable> */}
-      
-      {!dumyLoading && (
-          <ActivityIndicator size="small" color={COLORS.PRIMARY_COLOR} />
-        ) 
-      }
 
-      <CustomButton  buttonColor={COLORS.PRIMARY_COLOR}
+      {!dumyLoading && (
+        <ActivityIndicator size="small" color={COLORS.PRIMARY_COLOR} />
+      )}
+
+      <CustomButton
+        buttonColor={COLORS.PRIMARY_COLOR}
         // titleColor="#000"
         title="Add Remainder"
         buttonStyle={{
@@ -491,10 +476,11 @@ const AddPill = ({navigation}) => {
           // borderWidth: 1,
           // borderColor: '#1c1c1c',
           borderRadius: 6,
-          marginBottom:20 
+          marginBottom: 20,
         }}
         onPress={callingSometime}
-        textStyle={{fontSize: 20}}/>
+        textStyle={{fontSize: 20}}
+      />
     </ScrollView>
   );
 };
@@ -502,8 +488,8 @@ const AddPill = ({navigation}) => {
 export default AddPill;
 
 const styles = StyleSheet.create({
-  container:{
-flex:1
+  container: {
+    flex: 1,
   },
   amountContainer: {
     width: 120,
@@ -536,13 +522,12 @@ flex:1
   pilltabStyle: {
     width: '95%',
     height: 40,
-     backgroundColor: '#f4f4f4',
+    backgroundColor: '#f4f4f4',
     marginLeft: 10,
     fontSize: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingLeft: 10,
-    
   },
   foodPillStyle: {
     width: 100,

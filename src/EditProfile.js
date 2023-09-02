@@ -1,43 +1,51 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, TextInput, Button, StyleSheet, Pressable, Image,Text, Alert, ToastAndroid } from 'react-native';
+import React, {useState, useEffect, useContext} from 'react';
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  Pressable,
+  Image,
+  Text,
+  Alert,
+  ToastAndroid,
+} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import CustomButton from './components/CustomButton';
-import { COLORS } from './utilities/medicineTab';
-import Feather from 'react-native-vector-icons/Feather'
-import { darkStyles, lightStyles } from './theme/themeFile';
-import { AuthContext } from './AuthContext';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {COLORS} from './utilities/medicineTab';
+import Feather from 'react-native-vector-icons/Feather';
+import {darkStyles, lightStyles} from './theme/themeFile';
+import {AuthContext} from './AuthContext';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import { utils } from '@react-native-firebase/app';
+import {utils} from '@react-native-firebase/app';
 import LoadingScreen from './components/LoadingScreen';
+import CustomTextInput from './components/CustomTextInput';
+import {setWidth} from './components/globalDimension';
+
 const EditProfile = () => {
-
-
-  const [avatarSource, setAvatarSource] = useState(null)
-
-  const [uploading, setUploading] = useState(false)
-  const [transferred, setTransferred] = useState(0)
-
-  const { isDarkTheme,signUp} = useContext(AuthContext);
+  const [avatarSource, setAvatarSource] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+  const {isDarkTheme, signUp} = useContext(AuthContext);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
-  const [filePath,setFilePath] = useState(null)
+  const [filePath, setFilePath] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [mobile,setMobile]=useState()
+  const [mobile, setMobile] = useState();
 
   const currentStyles = isDarkTheme ? darkStyles : lightStyles;
   useEffect(() => {
     const userRef = firestore().collection('users').doc(auth().currentUser.uid);
-
     userRef.get().then(doc => {
       const userData = doc.data();
-      console.log("userdata =====",userData)
+      console.log('userdata =====', userData);
       setUserName(userData.userName);
       setEmail(userData.email);
-      setFilePath(userData?.filePath)
-      setMobile(userData.mobile)
+      setFilePath(userData?.filePath);
+      setMobile(userData.mobile);
     });
   }, []);
 
@@ -46,23 +54,23 @@ const EditProfile = () => {
 
     const userRef = firestore().collection('users').doc(auth().currentUser.uid);
 
-    userRef.update({
-      filePath,
-      userName,
-      email,
-      mobile
-    }).then(() => {
-      setLoading(false);
-      console.log("update successfully !!!")
-      ToastAndroid.show('Profle updated uccessfully !!', ToastAndroid.SHORT);
-  
-    }).catch(error => {
-      console.log(error);
-      setLoading(false);
-    });
+    userRef
+      .update({
+        filePath,
+        userName,
+        email,
+        mobile,
+      })
+      .then(() => {
+        setLoading(false);
+        console.log('update successfully !!!');
+        ToastAndroid.show('Profle updated uccessfully !!', ToastAndroid.SHORT);
+      })
+      .catch(error => {
+        console.log(error);
+        setLoading(false);
+      });
   };
-
-
 
   const selectPhotoTapped = () => {
     const options = {
@@ -116,14 +124,17 @@ const EditProfile = () => {
 
   return (
     <View style={[styles.container, currentStyles.container]}>
-  <View style={[styles.subHeader,currentStyles.container]}>
-       <Pressable 
-        onPress={selectPhotoTapped} >
-        <Image 
-      
-        source={{uri:filePath?filePath:'https://cdn-icons-png.flaticon.com/512/3177/3177440.png'}}
-         style={styles.profileImageStyle}/>
-        <View
+      <View style={[styles.subHeader, currentStyles.container]}>
+        <Pressable onPress={selectPhotoTapped}>
+          <Image
+            source={{
+              uri: filePath
+                ? filePath
+                : 'https://cdn-icons-png.flaticon.com/512/3177/3177440.png',
+            }}
+            style={styles.profileImageStyle}
+          />
+          <View
             style={{
               width: 30,
               height: 30,
@@ -136,32 +147,51 @@ const EditProfile = () => {
               marginTop: -35,
               elevation: 5,
             }}>
-  
-            <Feather name ="camera" size={15} color={currentStyles.container.color}/>
+            <Feather
+              name="camera"
+              size={15}
+              color={currentStyles.container.color}
+            />
           </View>
           {uploading ? (
             <View style={{}}>
-              <LoadingScreen/>
+              <LoadingScreen />
             </View>
           ) : null}
-       </Pressable>
+        </Pressable>
       </View>
-      
 
-      <Text style={[styles.headingStyle,currentStyles.text]}>Your Information</Text>
+      <Text style={[styles.headingStyle, currentStyles.text]}>
+        Your Information
+      </Text>
 
       <View style={[styles.inputContainer]}>
- <TextInput style={[styles.inputStyle,currentStyles.text]} value={userName}  onChangeText={(text)=>setUserName(text)} />
+        <CustomTextInput
+          style={[styles.inputStyle, currentStyles.text]}
+          value={userName}
+          onChangeText={setUserName}
+        />
       </View>
       <View style={[styles.inputContainer]}>
- <TextInput style={[styles.inputStyle,currentStyles.text]}  value={mobile} onChangeText={(text)=>setMobile(text)} />
+        <CustomTextInput
+          style={[styles.inputStyle, currentStyles.text]}
+          value={mobile}
+          onChangeText={setMobile}
+        />
       </View>
       <View style={[styles.inputContainer]}>
- <TextInput style={[styles.inputStyle,currentStyles.text]}  value={email} onChangeText={(text)=>setEmail(text)} />
+        <CustomTextInput
+          style={[styles.inputStyle, currentStyles.text]}
+          value={email}
+          onChangeText={setEmail}
+        />
       </View>
-      {loading && <LoadingScreen/>}
-      <CustomButton onPress={handleSubmit}  title="Update Profile" buttonColor={COLORS.PRIMARY_COLOR}
-        buttonStyle={{width:300, alignSelf:'center',marginTop:50 }}
+      {loading && <LoadingScreen />}
+      <CustomButton
+        onPress={handleSubmit}
+        title="Update Profile"
+        buttonColor={COLORS.PRIMARY_COLOR}
+        buttonStyle={{width: 300, alignSelf: 'center', marginTop: 50}}
       />
     </View>
   );
@@ -170,38 +200,39 @@ const EditProfile = () => {
 export default EditProfile;
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    
+  container: {
+    flex: 1,
   },
-  subHeader:{
-    flex:0.5,
- 
-    justifyContent:'center',
-    alignItems:'center'
+  subHeader: {
+    flex: 0.5,
+
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  profileImageStyle:{
-    width:120,height:120,
-    resizeMode:'cover',
-    borderRadius:120/2
+  profileImageStyle: {
+    width: 120,
+    height: 120,
+    resizeMode: 'cover',
+    borderRadius: 120 / 2,
   },
-  inputContainer:{
-    margin:10
+  inputContainer: {
+    margin: 10,
   },
-  inputStyle:{
-    height:50,
-    borderColor:'#ddd',
-    borderWidth:1,
-    paddingLeft:10,
-    borderRadius:5,
-    fontFamily: 'Poppins-Regular'
-  }, headingStyle: {
+  inputStyle: {
+    height: 50,
+    width: setWidth(95),
+    borderColor: '#ddd',
+    borderWidth: 1,
+    paddingLeft: 10,
+    borderRadius: 5,
+    fontFamily: 'Poppins-Regular',
+    backgroundColor: '#FFFFFF',
+  },
+  headingStyle: {
     margin: 10,
     fontSize: 18,
     fontWeight: 'bold',
-    marginLeft:20,
-    fontFamily: 'Poppins-Thin'
+    marginLeft: 20,
+    fontFamily: 'Poppins-Thin',
   },
-  
-
-})
+});

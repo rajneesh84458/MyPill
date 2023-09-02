@@ -2,7 +2,6 @@ import React, {useState, createRef, useContext} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  TextInput,
   View,
   Text,
   Image,
@@ -16,15 +15,14 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import storage from '@react-native-firebase/storage';
-import {handlePhotoClicker} from '../globalFunction/globalFile';
 import {COLORS} from '../utilities/medicineTab';
 import CustomButton from '../components/CustomButton';
 import LoadingScreen from '../components/LoadingScreen';
 import {setHeight, setWidth} from '../components/globalDimension';
-
 import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
+import CustomTextInput from '../components/CustomTextInput';
 
 const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -35,7 +33,7 @@ const RegisterScreen = ({navigation}) => {
   const [showVisiblity, setShowVisiblity] = useState(false);
   const [showVisiblityConfirm, setShowVisiblityConfirm] = useState(false);
   const [errortext, setErrortext] = useState('');
- 
+
   const [filePath, setFilePath] = useState('');
 
   const [uploading, setUploading] = useState(false);
@@ -174,7 +172,7 @@ const RegisterScreen = ({navigation}) => {
     }
   };
 
- const selectPhotoTapped = () => {
+  const selectPhotoTapped = () => {
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -246,8 +244,6 @@ const RegisterScreen = ({navigation}) => {
     );
   };
 
-
-
   return (
     <SafeAreaView
       style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
@@ -269,9 +265,7 @@ const RegisterScreen = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-           onPress={selectPhotoTapped}
-           
-            >
+            onPress={selectPhotoTapped}>
             {showImage()}
           </TouchableOpacity>
 
@@ -301,9 +295,10 @@ const RegisterScreen = ({navigation}) => {
 
         <KeyboardAvoidingView enabled>
           <View style={styles.sectionStyle}>
-            <TextInput
-              style={[styles.inputStyle, {color: theme.textColor}]}
-              onChangeText={UserName => setUserName(UserName)}
+            <CustomTextInput
+              value={userName}
+              style={{color: theme.textColor}}
+              onChangeText={setUserName}
               underlineColorAndroid="#f000"
               placeholder="Enter Name"
               placeholderTextColor="#8b9cb5"
@@ -322,19 +317,16 @@ const RegisterScreen = ({navigation}) => {
             />
           </View>
           <View style={styles.sectionStyle}>
-            <TextInput
+            <CustomTextInput
               value={mobile}
-              style={[styles.inputStyle, {color: theme.textColor}]}
-              onChangeText={text => setMobile(text)}
+              style={{color: theme.textColor}}
+              onChangeText={setMobile}
               underlineColorAndroid="#f000"
               placeholder="Enter Mobile Number"
               placeholderTextColor="#8b9cb5"
               autoCapitalize="none"
               keyboardType="number-pad"
               returnKeyType="next"
-              // onSubmitEditing={() =>
-              //   emailInputRef.current && emailInputRef.current.focus()
-              // }
               blurOnSubmit={false}
             />
             <Ionicons
@@ -345,9 +337,9 @@ const RegisterScreen = ({navigation}) => {
             />
           </View>
           <View style={styles.sectionStyle}>
-            <TextInput
-              style={[styles.inputStyle, {color: theme.textColor}]}
-              onChangeText={email => setEmail(email)}
+            <CustomTextInput
+              style={{color: theme.textColor}}
+              onChangeText={setEmail}
               underlineColorAndroid="#f000"
               placeholder="Enter Email"
               placeholderTextColor="#8b9cb5"
@@ -368,9 +360,9 @@ const RegisterScreen = ({navigation}) => {
             />
           </View>
           <View style={styles.sectionStyle}>
-            <TextInput
-              style={[styles.inputStyle, {color: theme.textColor}]}
-              onChangeText={password => setPassword(password)}
+            <CustomTextInput
+              style={{color: theme.textColor}}
+              onChangeText={setPassword}
               underlineColorAndroid="#f000"
               placeholder="Enter Password"
               placeholderTextColor="#8b9cb5"
@@ -384,15 +376,6 @@ const RegisterScreen = ({navigation}) => {
               activeOpacity={0.8}
               style={styles.touachableButton}
               onPress={setPasswordVisibility}>
-              {/* <Image
-                style={styles.buttonImage}
-                source={{
-                  uri: showVisiblity
-                    ? 'https://cdn-icons-png.flaticon.com/512/159/159604.png'
-                    : 'https://cdn-icons-png.flaticon.com/512/2355/2355322.png',
-                }}
-              /> */}
-
               {showVisiblity ? (
                 <Ionicons name="eye" size={20} color={COLORS.PRIMARY_COLOR} />
               ) : (
@@ -405,11 +388,9 @@ const RegisterScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <View style={styles.sectionStyle}>
-            <TextInput
-              style={[styles.inputStyle, {color: theme.textColor}]}
-              onChangeText={confirmPassowrd =>
-                setConfirmPassword(confirmPassowrd)
-              }
+            <CustomTextInput
+              style={{color: theme.textColor}}
+              onChangeText={setConfirmPassword}
               underlineColorAndroid="#f000"
               placeholder="Enter Confirm Password"
               placeholderTextColor="#8b9cb5"
@@ -423,14 +404,6 @@ const RegisterScreen = ({navigation}) => {
               activeOpacity={0.8}
               style={styles.touachableButton}
               onPress={setConfirmPasswordVisible}>
-              {/* <Image
-                style={styles.buttonImage}
-                source={{
-                  uri: showVisiblityConfirm
-                    ? 'https://cdn-icons-png.flaticon.com/512/159/159604.png'
-                    : 'https://cdn-icons-png.flaticon.com/512/2355/2355322.png',
-                }}
-              /> */}
               {showVisiblityConfirm ? (
                 <Ionicons name="eye" size={20} color={COLORS.PRIMARY_COLOR} />
               ) : (
@@ -455,18 +428,18 @@ const RegisterScreen = ({navigation}) => {
             {isLoading ? (
               <LoadingScreen />
             ) : (
-              <CustomButton 
-              buttonColor={COLORS.PRIMARY_COLOR}
-               buttonStyle={{
-            width: '80%',
-            alignSelf: 'center',
-          
-            borderRadius: 6,
-            marginBottom:20 
-          }}
-          onPress={handleRegister}
-          textStyle={{fontSize: 20}}
-               title="Register"  />
+              <CustomButton
+                buttonColor={COLORS.PRIMARY_COLOR}
+                buttonStyle={{
+                  width: '80%',
+                  alignSelf: 'center',
+                  borderRadius: 6,
+                  marginBottom: 20,
+                }}
+                onPress={handleRegister}
+                textStyle={{fontSize: 20}}
+                title="Register"
+              />
             )}
           </View>
         </KeyboardAvoidingView>
