@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  Image,
   KeyboardAvoidingView,
   Keyboard,
   ScrollView,
@@ -24,6 +23,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomText from '../components/CustomText';
 import {FONT_FAMILY} from '../utilities/helper';
+import CustomImage from '../components/CustomImage';
 
 const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -34,9 +34,7 @@ const RegisterScreen = ({navigation}) => {
   const [showVisiblity, setShowVisiblity] = useState(false);
   const [showVisiblityConfirm, setShowVisiblityConfirm] = useState(false);
   const [errortext, setErrortext] = useState('');
-
   const [filePath, setFilePath] = useState('');
-
   const [uploading, setUploading] = useState(false);
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
@@ -49,7 +47,6 @@ const RegisterScreen = ({navigation}) => {
     setShowVisiblityConfirm(!showVisiblityConfirm);
   };
 
-  // const handleSubmitButton = async () => {
   //   setErrortext('');
   //   if (!userName) return alert('Please fill Name');
   //   if (!email) return alert('Please fill Email');
@@ -227,15 +224,13 @@ const RegisterScreen = ({navigation}) => {
     console.log('+++++++++=', filePath);
 
     return (
-      <Image
+      <CustomImage
         source={{
           uri: filePath
             ? filePath
             : 'https://cdn-icons-png.flaticon.com/512/1828/1828817.png',
         }}
         style={{
-          // borderWidth: 1,
-          // backgroundColor: '#dddd',
           width: filePath ? 100 : 20,
           height: filePath ? 100 : 20,
           resizeMode: 'contain',
@@ -455,8 +450,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionStyle: {
-    // flexDirection: 'row',
-    // height: setHeight(7),
     marginBottom: 15,
     marginLeft: 35,
     marginRight: 35,

@@ -4,7 +4,6 @@ import {
   View,
   FlatList,
   TouchableOpacity,
-  Image,
   RefreshControl,
   ToastAndroid,
   Alert,
@@ -20,6 +19,7 @@ import LoadingScreen from './components/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
 import CustomText from './components/CustomText';
 import {FONT_FAMILY} from './utilities/helper';
+import CustomImage from './components/CustomImage';
 
 const HomePage = ({route, navigation}) => {
   const isFocused = useIsFocused();
@@ -34,7 +34,6 @@ const HomePage = ({route, navigation}) => {
 
   const {user} = useContext(AuthContext);
   console.log('Getting usr', user.uid);
-
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
     fetchMedicines();
@@ -123,7 +122,7 @@ const HomePage = ({route, navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
+          <CustomImage
             source={{
               uri: user?.photoURL
                 ? user?.photoURL
@@ -174,7 +173,7 @@ const HomePage = ({route, navigation}) => {
                   {backgroundColor: theme.backgroundColor},
                 ]}>
                 <View style={styles.ImageContainer}>
-                  <Image
+                  <CustomImage
                     source={{uri: item.choosenImage}}
                     style={[styles.imageStyle]}
                   />
@@ -227,7 +226,7 @@ const HomePage = ({route, navigation}) => {
                       }}
                     />
 
-                    <Image
+                    <CustomImage
                       source={{uri: item.pillImage}}
                       style={{
                         width: 30,
@@ -248,7 +247,7 @@ const HomePage = ({route, navigation}) => {
         />
       ) : (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Image
+          <CustomImage
             source={{
               uri: 'https://img.freepik.com/free-vector/404-error-with-tired-person-concept-illustration_114360-7969.jpg?w=1060&t=st=1677839009~exp=1677839609~hmac=63fc170aae3c2a11db8d87446ce30f48cab4529e36526974011783c152d3ecce',
             }}

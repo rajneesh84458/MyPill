@@ -1,14 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
-  TextInput,
-  Button,
   StyleSheet,
   Pressable,
-  Image,
   Text,
-  Alert,
   ToastAndroid,
+  Platform,
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
@@ -18,18 +15,17 @@ import {COLORS} from './utilities/medicineTab';
 import Feather from 'react-native-vector-icons/Feather';
 import {darkStyles, lightStyles} from './theme/themeFile';
 import {AuthContext} from './AuthContext';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import {utils} from '@react-native-firebase/app';
+
 import LoadingScreen from './components/LoadingScreen';
 import CustomTextInput from './components/CustomTextInput';
 import {setWidth} from './components/globalDimension';
+import CustomImage from './components/CustomImage';
 
 const EditProfile = () => {
-  const [avatarSource, setAvatarSource] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [transferred, setTransferred] = useState(0);
-  const {isDarkTheme, signUp} = useContext(AuthContext);
+  const {isDarkTheme} = useContext(AuthContext);
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [filePath, setFilePath] = useState(null);
@@ -51,9 +47,7 @@ const EditProfile = () => {
 
   const handleSubmit = () => {
     setLoading(true);
-
     const userRef = firestore().collection('users').doc(auth().currentUser.uid);
-
     userRef
       .update({
         filePath,
@@ -126,7 +120,7 @@ const EditProfile = () => {
     <View style={[styles.container, currentStyles.container]}>
       <View style={[styles.subHeader, currentStyles.container]}>
         <Pressable onPress={selectPhotoTapped}>
-          <Image
+          <CustomImage
             source={{
               uri: filePath
                 ? filePath

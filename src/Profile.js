@@ -1,4 +1,4 @@
-import {Image, Pressable, StyleSheet, View, Alert, Switch} from 'react-native';
+import {Pressable, StyleSheet, View, Alert, Switch} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {COLORS} from './utilities/medicineTab';
 import {AuthContext} from './AuthContext';
@@ -14,11 +14,11 @@ import {
 import CustomButton from './components/CustomButton';
 import Feather from 'react-native-vector-icons/Feather';
 import CustomText from './components/CustomText';
+import CustomImage from './components/CustomImage';
 const Profile = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
   const {user, signOut, isDarkTheme, toggleTheme} = useContext(AuthContext);
   const [isEnabled, setIsEnabled] = useState(false);
-
   const theme = isDarkTheme ? darkTheme : lightTheme;
   const currentStyles = isDarkTheme ? darkStyles : lightStyles;
 
@@ -68,7 +68,7 @@ const Profile = ({navigation}) => {
             borderRadius: 70,
             backgroundColor: '#f4f4f4',
           }}>
-          <Image
+          <CustomImage
             source={{
               uri: imageUri ? imageUri : user?.photoURL,
             }}
@@ -76,7 +76,6 @@ const Profile = ({navigation}) => {
               width: 140,
               height: 140,
               borderRadius: 70,
-
               resizeMode: 'cover',
             }}
           />
@@ -179,9 +178,7 @@ const Profile = ({navigation}) => {
     </View>
   );
 };
-
 export default Profile;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,6 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import AddPill from '../../components/AddPill';
+import CustomImage from '../components/CustomImage';
+import CustomText from '../components/CustomText';
 import HomePage from '../HomePage';
 import Profile from '../Profile';
 import {COLORS} from '../utilities/medicineTab';
@@ -48,7 +50,7 @@ function MyTabs() {
         options={{
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
+              <CustomImage
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/512/1946/1946436.png',
                 }}
@@ -59,13 +61,13 @@ function MyTabs() {
                   tintColor: focused ? COLORS.PRIMARY_COLOR : COLORS.BLACK,
                 }}
               />
-              <Text
+              <CustomText
+                title="Home"
                 style={{
                   color: focused ? COLORS.PRIMARY_COLOR : COLORS.BLACK,
                   fontSize: 14,
-                }}>
-                Home
-              </Text>
+                }}
+              />
             </View>
           ),
         }}
@@ -75,7 +77,7 @@ function MyTabs() {
         component={AddPill}
         options={{
           tabBarIcon: ({focused}) => (
-            <Image
+            <CustomImage
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/1828/1828919.png',
               }}
@@ -97,7 +99,7 @@ function MyTabs() {
         options={{
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image
+              <CustomImage
                 source={{
                   uri: 'https://cdn-icons-png.flaticon.com/512/709/709722.png',
                 }}
@@ -108,13 +110,13 @@ function MyTabs() {
                   tintColor: focused ? COLORS.PRIMARY_COLOR : COLORS.BLACK,
                 }}
               />
-              <Text
+              <CustomText
+                title="Profile"
                 style={{
                   color: focused ? COLORS.PRIMARY_COLOR : COLORS.BLACK,
                   fontSize: 14,
-                }}>
-                Profile
-              </Text>
+                }}
+              />
             </View>
           ),
         }}

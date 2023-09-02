@@ -18,6 +18,7 @@ import LoadingScreen from '../components/LoadingScreen';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomText from '../components/CustomText';
 import {FONT_FAMILY} from '../utilities/helper';
+import CustomImage from '../components/CustomImage';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('arun@test.com');
@@ -49,7 +50,7 @@ export default function LoginScreen({navigation}) {
     <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <KeyboardAvoidingView behavior="position">
         <View style={[styles.box1, {backgroundColor: theme.backgroundColor}]}>
-          <Image
+          <CustomImage
             style={[styles.img]}
             source={{
               uri: 'https://t3.ftcdn.net/jpg/00/37/93/86/360_F_37938684_xbSDgZbd0VMsjzJDkLizUhIRAHCmrbXf.jpg',

@@ -2,7 +2,6 @@ import {
   Pressable,
   StyleSheet,
   View,
-  Image,
   TouchableOpacity,
   Alert,
   ScrollView,
@@ -28,6 +27,7 @@ import KeepAwake from 'react-native-keep-awake';
 import {saveDataToFirestore} from '../globalFunction/globalFile';
 import CustomTextInput from './CustomTextInput';
 import CustomText from './CustomText';
+import CustomImage from './CustomImage';
 
 const AddPill = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
@@ -178,7 +178,6 @@ const AddPill = ({navigation}) => {
     };
 
     handleScheduleNotify();
-    // saveDataToFirestore(uuid.v4(),pillName,foodStatus,timeStatus,pillType,pillImage,imageUri,chosenDate,weekday,chosenTime)
     saveDataToFirestore(products);
     navigation.navigate('Home', products);
   };
@@ -205,7 +204,7 @@ const AddPill = ({navigation}) => {
       <TouchableOpacity
         style={{margin: 20}}
         onPress={() => navigation.goBack()}>
-        <Image
+        <CustomImage
           source={{
             uri: 'https://cdn-icons-png.flaticon.com/512/130/130882.png',
           }}
@@ -236,7 +235,7 @@ const AddPill = ({navigation}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image
+          <CustomImage
             source={{
               uri: imageUri
                 ? imageUri
@@ -338,7 +337,7 @@ const AddPill = ({navigation}) => {
                     alignItems: 'center',
                     borderRadius: 20,
                   }}>
-                  <Image
+                  <CustomImage
                     source={{uri: item.tabImage}}
                     style={{
                       width: 30,
@@ -428,7 +427,7 @@ const AddPill = ({navigation}) => {
               alignItems: 'center',
               paddingHorizontal: 10,
             }}>
-            <Image
+            <CustomImage
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/3602/3602123.png',
               }}
@@ -548,16 +547,6 @@ const styles = StyleSheet.create({
 
   tabbarContainer: {
     flexDirection: 'row',
-  },
-  tab: {
-    // width: 85,
-    flex: 1,
-    height: 50,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    marginHorizontal: 4,
   },
   tabText: {
     fontSize: 14,
