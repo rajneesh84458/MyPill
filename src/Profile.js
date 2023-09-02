@@ -1,21 +1,19 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-  Switch,
-} from 'react-native';
+import {Image, Pressable, StyleSheet, View, Alert, Switch} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {COLORS} from './utilities/medicineTab';
 import {AuthContext} from './AuthContext';
 import ImagePicker from 'react-native-image-crop-picker';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {darkStyles, darkTheme, lightStyles, lightTheme} from './theme/themeFile';
+import {
+  darkStyles,
+  darkTheme,
+  lightStyles,
+  lightTheme,
+} from './theme/themeFile';
 import CustomButton from './components/CustomButton';
-import Feather from 'react-native-vector-icons/Feather'
+import Feather from 'react-native-vector-icons/Feather';
+import CustomText from './components/CustomText';
 const Profile = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
   const {user, signOut, isDarkTheme, toggleTheme} = useContext(AuthContext);
@@ -23,8 +21,6 @@ const Profile = ({navigation}) => {
 
   const theme = isDarkTheme ? darkTheme : lightTheme;
   const currentStyles = isDarkTheme ? darkStyles : lightStyles;
-
- 
 
   const takeImage = () => {
     const title = 'Error title..';
@@ -37,7 +33,6 @@ const Profile = ({navigation}) => {
         console.log(image.path);
         setImageUri(image.path);
       })
-
       .catch(e => Alert.alert(title, e.message));
   };
 
@@ -98,48 +93,48 @@ const Profile = ({navigation}) => {
               marginTop: -30,
               elevation: 5,
             }}>
-          <Feather name ="camera" size={15} color={currentStyles.container.color}/>
+            <Feather
+              name="camera"
+              size={15}
+              color={currentStyles.container.color}
+            />
           </View>
         </Pressable>
 
         <View style={{height: 120, padding: 10}}>
           {/* email   */}
           <View>
-            <Text
+            <CustomText
+              title={user.displayName}
               style={[
                 styles.stripTextStyle,
                 {fontWeight: 'bold', fontSize: 20},
                 {color: theme.textColor},
-              ]}>
-              {user.displayName}
-            </Text>
-            <Text style={[styles.stripTextStyle, {color: theme.textColor}]}>
-              {user.email}
-            </Text>
-            {/* <Pressable onPress={()=>navigation.navigate('EditProfile')}
-             style={styles.editButtonStyle}>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 16,
-                }}>
-                Edit Profile
-              </Text>
-            </Pressable> */}
-            <CustomButton onPress={()=>navigation.navigate('EditProfile')} title="Edit Profile"  buttonColor={COLORS.PRIMARY_COLOR} buttonStyle={{
-              width:140,
-              marginTop:20,
-              borderRadius:10
-            }}/>
+              ]}
+            />
+            <CustomText
+              title={user.email}
+              style={[styles.stripTextStyle, {color: theme.textColor}]}
+            />
+            <CustomButton
+              onPress={() => navigation.navigate('EditProfile')}
+              title="Edit Profile"
+              buttonColor={COLORS.PRIMARY_COLOR}
+              buttonStyle={{
+                width: 140,
+                marginTop: 20,
+                borderRadius: 10,
+              }}
+            />
           </View>
         </View>
       </View>
 
       <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
-        <Text style={[styles.stripTextStyle, {color: theme.textColor}]}>
-          DarkMode
-        </Text>
+        <CustomText
+          title="DarkMode"
+          style={[styles.stripTextStyle, {color: theme.textColor}]}
+        />
         <Switch
           trackColor={{false: '#767577', true: COLORS.PRIMARY_COLOR}}
           thumbColor={
@@ -153,9 +148,10 @@ const Profile = ({navigation}) => {
         />
       </Pressable>
       <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
-        <Text style={[styles.stripTextStyle, {color: theme.textColor}]}>
-          Language
-        </Text>
+        <CustomText
+          title="Language"
+          style={[styles.stripTextStyle, {color: theme.textColor}]}
+        />
         <FontAwesome
           name="angle-right"
           size={20}
@@ -163,9 +159,10 @@ const Profile = ({navigation}) => {
         />
       </Pressable>
       <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
-        <Text style={[styles.stripTextStyle, {color: theme.textColor}]}>
-          Progress
-        </Text>
+        <CustomText
+          title="Progress"
+          style={[styles.stripTextStyle, {color: theme.textColor}]}
+        />
         <FontAwesome
           name="angle-right"
           size={20}
@@ -173,9 +170,10 @@ const Profile = ({navigation}) => {
         />
       </Pressable>
       <Pressable onPress={() => onLogout(user)} style={styles.stripStyle}>
-        <Text style={[styles.stripTextStyle, {color: theme.textColor}]}>
-          Log Out
-        </Text>
+        <CustomText
+          title="Log out"
+          style={[styles.stripTextStyle, {color: theme.textColor}]}
+        />
         <SimpleLineIcons name="logout" size={20} color={COLORS.PRIMARY_COLOR} />
       </Pressable>
     </View>
@@ -219,19 +217,3 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
 });
-
-// import {StyleSheet, Text, View} from 'react-native';
-// import React from 'react';
-// import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-// const Profile = () => {
-//   return (
-//     <View style={{marginTop: 30}}>
-//       <Text>Profile</Text>
-//       <FontAwesomeIcon name="rocket" size={30} color="#900" />;
-//     </View>
-//   );
-// };
-
-// export default Profile;
-
-// const styles = StyleSheet.create({});

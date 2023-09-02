@@ -1,43 +1,7 @@
-// import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-// import React from 'react';
-// import {setHeight, setWidth} from './globalDimension';
-// import {COLORS} from '../utilities/medicineTab';
-
-// const CustomButton = ({title, onPress}) => {
-//   return (
-//     <TouchableOpacity style={styles.buttonStyle} onPress={onPress}>
-//       <Text
-//         style={{
-//           fontSize: 18,
-//           color: '#fff',
-//           fontFamily: 'Poppins-Bold',
-//         }}>
-//         {title}
-//       </Text>
-//     </TouchableOpacity>
-//   );
-// };
-
-// export default CustomButton;
-
-// const styles = StyleSheet.create({
-//   buttonStyle: {
-//     width: setWidth(80),
-//     height: setHeight(6),
-//     justifyContent: 'center',
-//     backgroundColor: COLORS.PRIMARY_COLOR,
-//     borderRadius: 5,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
-
-
 import React from 'react';
-import {Text, TouchableOpacity, StyleSheet, Pressable} from 'react-native';
-import {setHeight, setWidth} from './globalDimension';
+import {StyleSheet, Pressable} from 'react-native';
 import {COLORS} from '../utilities/medicineTab';
+import CustomText from './CustomText';
 const CustomButton = ({
   title,
   onPress,
@@ -54,10 +18,14 @@ const CustomButton = ({
         backgroundColor: buttonColor || '#512DA8',
       }}
       onPress={onPress}>
-      <Text
-        style={{...styles.title, ...textStyle, color: titleColor || '#fff'}}>
-        {title}
-      </Text>
+      <CustomText
+        title={title}
+        style={{
+          ...styles.title,
+          ...textStyle,
+          color: titleColor || COLORS.WHITE,
+        }}
+      />
     </Pressable>
   );
 };
@@ -66,14 +34,13 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   container: {
-  
     backgroundColor: COLORS.PRIMARY_COLOR,
     height: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    color: '#fff',
+    color: COLORS.WHITE,
     fontSize: 16,
   },
 });

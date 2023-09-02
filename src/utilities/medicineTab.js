@@ -76,6 +76,7 @@ const COLORS = {
   REDDISH: '#FF6263',
   RED: '#F53920',
   LIGHT_BLUE: 'rgba(82,107,242,0.1)',
+  WHITE: '#FFFFFF',
 };
 
 export {tabData, COLORS, foodStatusList, timeOfDay};

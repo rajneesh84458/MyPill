@@ -1,7 +1,6 @@
 import {
   Pressable,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -28,6 +27,7 @@ import CustomButton from './CustomButton';
 import KeepAwake from 'react-native-keep-awake';
 import {saveDataToFirestore} from '../globalFunction/globalFile';
 import CustomTextInput from './CustomTextInput';
+import CustomText from './CustomText';
 
 const AddPill = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
@@ -250,14 +250,20 @@ const AddPill = ({navigation}) => {
             }}
           />
         </TouchableOpacity>
-        <Text style={{fontSize: 14, marginVertical: 5, color: theme.textColor}}>
-          Add you medicine photo
-        </Text>
+        <CustomText
+          title="Add you medicine photo"
+          style={{
+            fontSize: 14,
+            marginVertical: 5,
+            color: theme.textColor,
+          }}
+        />
       </View>
       <View style={{height: 100, marginTop: 20}}>
-        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
-          Enter the name of your medicine
-        </Text>
+        <CustomText
+          title=" Enter the name of your medicine"
+          style={[styles.headingStyle, {color: theme.textColor}]}
+        />
         <CustomTextInput
           placeholderTextColor="#ccc"
           placeholder="Enter Pill Name"
@@ -272,9 +278,10 @@ const AddPill = ({navigation}) => {
 
       {/* food and Pills */}
       <View style={{height: 120}}>
-        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
-          When would you take your dose ?
-        </Text>
+        <CustomText
+          title=" When would you take your dose ?"
+          style={[styles.headingStyle, {color: theme.textColor}]}
+        />
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -293,23 +300,25 @@ const AddPill = ({navigation}) => {
                         : '#f4f4f4',
                   },
                 ]}>
-                <Text
+                <CustomText
+                  title={item.intake}
                   style={{
-                    color: foodStatus === item.intake ? 'white' : '#000',
+                    color:
+                      foodStatus === item.intake ? COLORS.WHITE : COLORS.BLACK,
                     fontSize: 12,
                     fontWeight: 'bold',
-                  }}>
-                  {item.intake}
-                </Text>
+                  }}
+                />
               </Pressable>
             );
           })}
         </ScrollView>
       </View>
       <View>
-        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
-          Choose a medicine form
-        </Text>
+        <CustomText
+          title=" Choose a medicine form"
+          style={[styles.headingStyle, {color: theme.textColor}]}
+        />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{margin: 10, flexDirection: 'row'}}>
             {tabData.map((item, index) => {
@@ -338,15 +347,17 @@ const AddPill = ({navigation}) => {
                       tintColor: pillImage === item.tabImage ? '#fff' : '#000',
                     }}
                   />
-                  <Text
+                  <CustomText
+                    title={item.tabLabel}
                     style={{
                       fontSize: 12,
-
                       paddingVertical: 10,
-                      color: pillType === item.tabLabel ? '#fff' : '#000',
-                    }}>
-                    {item.tabLabel}
-                  </Text>
+                      color:
+                        pillType === item.tabLabel
+                          ? COLORS.WHITE
+                          : COLORS.BLACK,
+                    }}
+                  />
                 </Pressable>
               );
             })}
@@ -354,9 +365,10 @@ const AddPill = ({navigation}) => {
         </ScrollView>
       </View>
       {/* schedule time  */}
-      <Text style={[styles.headingStyle, {color: theme.textColor}]}>
-        Choose a desired Time
-      </Text>
+      <CustomText
+        title="Choose a desired Time"
+        style={[styles.headingStyle, {color: theme.textColor}]}
+      />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{}}>
         {timeOfDay.map(item => {
           return (
@@ -373,14 +385,17 @@ const AddPill = ({navigation}) => {
                       : '#f4f4f4',
                 },
               ]}>
-              <Text
+              <CustomText
+                title={item.intakeTime}
                 style={{
-                  color: timeStatus === item.intakeTime ? 'white' : '#000',
+                  color:
+                    timeStatus === item.intakeTime
+                      ? COLORS.WHITE
+                      : COLORS.BLACK,
                   fontSize: 12,
                   fontWeight: 'bold',
-                }}>
-                {item.intakeTime}
-              </Text>
+                }}
+              />
             </Pressable>
           );
         })}
@@ -394,14 +409,14 @@ const AddPill = ({navigation}) => {
       />
 
       <View style={{height: 120}}>
-        <Text style={[styles.headingStyle, {color: theme.textColor}]}>
-          Notification
-        </Text>
+        <CustomText
+          title=" Notification"
+          style={[styles.headingStyle, {color: theme.textColor}]}
+        />
         <View
           style={{
             flex: 1,
             flexDirection: 'row',
-            // justifyContent: 'space-between',
           }}>
           <Pressable
             style={{
@@ -425,12 +440,14 @@ const AddPill = ({navigation}) => {
               }}
             />
 
-            <Text style={{fontSize: 20, paddingHorizontal: 10}}>
-              {selectedTime}
-            </Text>
-            <Text style={{textAlign: 'right', paddingLeft: 30}}>
-              {selectedDate.toDateString()}
-            </Text>
+            <CustomText
+              title={selectedTime}
+              style={{fontSize: 20, paddingHorizontal: 10}}
+            />
+            <CustomText
+              title={selectedDate.toDateString()}
+              style={{textAlign: 'right', paddingLeft: 30}}
+            />
           </Pressable>
 
           <Pressable
@@ -444,23 +461,10 @@ const AddPill = ({navigation}) => {
               marginTop: 10,
               marginRight: 10,
             }}>
-            <Text style={{fontSize: 20}}>+</Text>
+            <CustomText title="+" style={{fontSize: 20}} />
           </Pressable>
         </View>
       </View>
-
-      {/* <Pressable
-          onPress={handleLocalNotification}
-          style={{
-            width: 60,
-            height: 60,
-            backgroundColor: '#f4f4f4',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 10,
-          }}>
-          <Text style={{fontSize: 20}}>Test</Text>
-        </Pressable> */}
 
       {!dumyLoading && (
         <ActivityIndicator size="small" color={COLORS.PRIMARY_COLOR} />

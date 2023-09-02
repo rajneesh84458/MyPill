@@ -29,14 +29,14 @@ const COLORS = {
 };
 
 const FONT_FAMILY = {
-  REGULAR: 'AnekDevanagari-Regular',
-  BOLD: 'AnekDevanagari-Bold',
-  THIN: 'AnekDevanagari-Thin',
-  LIGHT: 'AnekDevanagari-Light',
-  MEDIUM: 'AnekDevanagari-Medium',
-  SEMI_MEDIUM: 'AnekDevanagari-SemiBold',
-  EXTRA_LIGHT: 'AnekDevanagari-ExtraLight',
-  EXTRA_BOLD: 'AnekDevanagari-ExtraBold',
+  REGULAR: 'Poppins-Regular',
+  BOLD: 'Poppins-Bold',
+  THIN: 'Poppins-Thin',
+  LIGHT: 'Poppins-Light',
+  MEDIUM: 'Poppins-Medium',
+  SEMI_MEDIUM: 'Poppins-SemiBold',
+  EXTRA_LIGHT: 'Poppins-ExtraLight',
+  EXTRA_BOLD: 'Poppins-ExtraBold',
 };
 
 const FONT_SIZE = {
@@ -60,18 +60,6 @@ const guidelineBaseHeight = 680;
 const memorizeDimensions = () => {
   const cacheHeight = {};
   const cacheWidth = {};
-  // const setHeight = (h) => {
-  //   if (!cacheHeight[h]) {
-  //     cacheHeight[h] = (height / 100) * h;
-  //   }
-  //   return cacheHeight[h];
-  // };
-  // const setWidth = (w) => {
-  //   if (!cacheWidth[w]) {
-  //     cacheWidth[w] = (width / 100) * w;
-  //   }
-  //   return cacheWidth[w];
-  // };
   const setWidth = w => {
     // Parse string percentage input and convert it to number.
     if (!cacheWidth[w]) {
@@ -222,6 +210,5 @@ export {
   COLORS,
   COLORS_PALLETE,
   BUTTON_COLOR,
-  TEXT_COLOR,
   appStyle,
 };

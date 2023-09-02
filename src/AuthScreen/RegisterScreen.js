@@ -3,7 +3,6 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  Text,
   Image,
   KeyboardAvoidingView,
   Keyboard,
@@ -23,6 +22,8 @@ import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
 import {launchImageLibrary} from 'react-native-image-picker';
 import CustomTextInput from '../components/CustomTextInput';
+import CustomText from '../components/CustomText';
+import {FONT_FAMILY} from '../utilities/helper';
 
 const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -280,15 +281,15 @@ const RegisterScreen = ({navigation}) => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text
+              <CustomText
+                title=" Add Picture"
                 style={{
                   fontSize: 14,
                   color: theme.textColor,
-                  fontFamily: 'Poppins-Regular',
+                  fontFamily: FONT_FAMILY.REGULAR,
                   paddingLeft: 5,
-                }}>
-                Add Picture
-              </Text>
+                }}
+              />
             </View>
           )}
         </View>
@@ -416,7 +417,7 @@ const RegisterScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           {errortext != '' ? (
-            <Text style={styles.errorTextStyle}> {errortext} </Text>
+            <CustomText title={errortext} style={styles.errorTextStyle} />
           ) : null}
 
           <View

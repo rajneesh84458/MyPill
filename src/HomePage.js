@@ -1,40 +1,34 @@
 import moment from 'moment';
 import {
   StyleSheet,
-  Text,
   View,
   FlatList,
   TouchableOpacity,
   Image,
   RefreshControl,
   ToastAndroid,
-  Pressable,
   Alert,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {COLORS} from './utilities/medicineTab';
-import {clearData, getData} from './utilities/asyncstorage';
 import CalendarStrip from 'react-native-calendar-strip';
 import {AuthContext} from './AuthContext';
 import {darkTheme, lightTheme} from './theme/themeFile';
 import CustomButton from './components/CustomButton';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import LoadingScreen from './components/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
+import CustomText from './components/CustomText';
+import {FONT_FAMILY} from './utilities/helper';
 
 const HomePage = ({route, navigation}) => {
   const isFocused = useIsFocused();
   const [selectedDate, setSelectedDate] = useState(moment());
   const [docid, setDocid] = useState(null);
-  const {signIn, isLoading, isDarkTheme, setIsLoading} =
-    useContext(AuthContext);
+  const {isLoading, isDarkTheme, setIsLoading} = useContext(AuthContext);
 
   console.log('routeparams', route.params);
-
   const theme = isDarkTheme ? darkTheme : lightTheme;
-
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -64,7 +58,6 @@ const HomePage = ({route, navigation}) => {
       setData(newData);
       setIsLoading(false);
       setRefreshing(false);
-      console.log('=============', data);
     });
   };
 
@@ -112,12 +105,15 @@ const HomePage = ({route, navigation}) => {
           flex: 0.2,
         }}>
         <View>
-          <Text style={[styles.headerTextStyle, {color: theme.textColor}]}>
-            Hello,
-          </Text>
-          <Text style={[styles.headerTextStyle, {color: theme.textColor}]}>
-            {user.displayName}
-          </Text>
+          <CustomText
+            title="Hello, "
+            style={[styles.headerTextStyle, {color: theme.textColor}]}
+          />
+
+          <CustomText
+            title={user.displayName}
+            style={[styles.headerTextStyle, {color: theme.textColor}]}
+          />
         </View>
 
         <TouchableOpacity
@@ -149,7 +145,7 @@ const HomePage = ({route, navigation}) => {
         calendarHeaderStyle={{
           color: theme.textColor,
           fontSize: 20,
-          fontFamily: 'Poppins-Regular',
+          fontFamily: FONT_FAMILY.REGULAR,
         }}
         calendarColor={COLORS.REDDISH}
         dateNumberStyle={{color: theme.textColor}}
@@ -162,7 +158,6 @@ const HomePage = ({route, navigation}) => {
         onDateSelected={date => setSelectedDate(date)}
         //  minDate={selectedDate}
       />
-
       {isLoading ? (
         <LoadingScreen />
       ) : filteredData.length > 0 ? (
@@ -190,51 +185,48 @@ const HomePage = ({route, navigation}) => {
                     style={{
                       width: 120,
                     }}>
-                    <Text
+                    <CustomText
+                      title={item.name}
                       style={{
                         paddingVertical: 10,
                         fontSize: 16,
                         color: theme.textColor,
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {item.name}
-                    </Text>
-                    <Text
+                        fontFamily: FONT_FAMILY.REGULAR,
+                      }}
+                    />
+                    <CustomText
+                      title={item.foodStatus}
                       style={{
                         color: theme.textColor,
                         fontSize: 12,
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {item.foodStatus}
-                    </Text>
-                    <Text
+                        fontFamily: FONT_FAMILY.REGULAR,
+                      }}
+                    />
+
+                    <CustomText
+                      title={item.timeStatus}
                       style={{
                         color: theme.textColor,
                         fontSize: 12,
-                        fontFamily: 'Poppins-Regular',
-                      }}>
-                      {item.timeStatus}
-                    </Text>
+                        fontFamily: FONT_FAMILY.REGULAR,
+                      }}
+                    />
                   </View>
 
                   <View
                     style={{
                       width: 140,
                       height: 80,
-
                       alignItems: 'flex-end',
-
-                      // marginLeft: 20,
-                      // backgroundColor:'red'
                     }}>
-                    <Text
+                    <CustomText
+                      title={item.notifyTime}
                       style={{
                         fontSize: 20,
-                        // paddingVertical: 10,
                         color: theme.textColor,
-                      }}>
-                      {item.notifyTime}
-                    </Text>
+                      }}
+                    />
+
                     <Image
                       source={{uri: item.pillImage}}
                       style={{
@@ -267,15 +259,15 @@ const HomePage = ({route, navigation}) => {
               borderRadius: 20,
             }}
           />
-          <Text
+          <CustomText
+            title="Data not found !!"
             style={{
               textAlign: 'center',
               fontWeight: 'bold',
               color: theme.textColor,
               marginTop: 20,
-            }}>
-            Data not found !!
-          </Text>
+            }}
+          />
         </View>
       )}
 

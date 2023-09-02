@@ -1,19 +1,14 @@
 import React, {useContext, useState} from 'react';
 import {
   View,
-  Text,
   Image,
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
-  TextInput,
   Pressable,
-  Alert,
 } from 'react-native';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
 import CustomButton from '../components/CustomButton';
 import {COLORS} from '../utilities/medicineTab';
 import {setHeight, setWidth} from '../components/globalDimension';
@@ -21,6 +16,8 @@ import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
 import LoadingScreen from '../components/LoadingScreen';
 import CustomTextInput from '../components/CustomTextInput';
+import CustomText from '../components/CustomText';
+import {FONT_FAMILY} from '../utilities/helper';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('arun@test.com');
@@ -34,7 +31,6 @@ export default function LoginScreen({navigation}) {
 
   const {signIn, isLoading, isDarkTheme} = useContext(AuthContext);
   const theme = isDarkTheme ? darkTheme : lightTheme;
-
   const handleLogin = () => {
     if (email === '') {
       return setErrortext('Email address are required.');
@@ -59,9 +55,10 @@ export default function LoginScreen({navigation}) {
               uri: 'https://t3.ftcdn.net/jpg/00/37/93/86/360_F_37938684_xbSDgZbd0VMsjzJDkLizUhIRAHCmrbXf.jpg',
             }}
           />
-          <Text style={[styles.text, {color: theme.textColor}]}>
-            Take Your Pills Carefully !{' '}
-          </Text>
+          <CustomText
+            title="Take Your Pills Carefully !"
+            style={[styles.text, {color: theme.textColor}]}
+          />
         </View>
         <View
           style={[
@@ -107,8 +104,10 @@ export default function LoginScreen({navigation}) {
             )}
           </TouchableOpacity>
         </View>
-        <Text style={{color: 'red', textAlign: 'center'}}>{errortext}</Text>
-
+        <CustomText
+          title={errortext}
+          style={{color: COLORS.RED, textAlign: 'center'}}
+        />
         {isLoading ? (
           <LoadingScreen />
         ) : (
@@ -134,19 +133,19 @@ export default function LoginScreen({navigation}) {
           </View>
         )}
         <Pressable onPress={() => navigation.navigate('Register')}>
-          <Text
+          <CustomText
+            title="New to app?"
             style={{
               textAlign: 'center',
               marginTop: 20,
-              fontFamily: 'Poppins-Regular',
+              fontFamily: FONT_FAMILY.REGULAR,
               color: theme.textColor,
             }}>
-            New to app?{' '}
-            <Text
-              style={[{fontFamily: 'Poppins-Bold', color: theme.textColor}]}>
-              Register
-            </Text>
-          </Text>
+            <CustomText
+              title="Register"
+              style={[{fontFamily: FONT_FAMILY.BOLD, color: theme.textColor}]}
+            />
+          </CustomText>
         </Pressable>
       </KeyboardAvoidingView>
     </View>
