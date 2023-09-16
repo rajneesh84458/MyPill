@@ -52,46 +52,17 @@ const FONT_SIZE = {
   TWENTY_FIVE: 25,
   THIRTY: 30,
 };
-
-// Guideline sizes are based on standard ~5" screen mobile device
-const guidelineBaseWidth = 350;
-const guidelineBaseHeight = 680;
-
-const memorizeDimensions = () => {
-  const cacheHeight = {};
-  const cacheWidth = {};
-  const setWidth = w => {
-    // Parse string percentage input and convert it to number.
-    if (!cacheWidth[w]) {
-      const elemWidth = typeof w === 'number' ? w : parseFloat(w);
-      cacheWidth[w] = PixelRatio.roundToNearestPixel((width * elemWidth) / 100);
-    }
-    return cacheWidth[w];
-  };
-
-  const setHeight = h => {
-    // Parse string percentage input and convert it to number.
-    if (!cacheHeight[h]) {
-      const elemHeight = typeof h === 'number' ? h : parseFloat(h);
-      // Use PixelRatio.roundToNearestPixel method in order to round the layout
-      // size (dp) to the nearest one that correspons to an integer number of pixels.
-      cacheHeight[h] = PixelRatio.roundToNearestPixel(
-        (height * elemHeight) / 100,
-      );
-    }
-    return cacheHeight[h];
-  };
-
-  return {
-    setWidth,
-    setHeight,
-  };
+// Function to calculate responsive Width
+const setWidth = w => {
+  const screenWidth = width;
+  return PixelRatio.roundToNearestPixel((w * screenWidth) / 100);
 };
 
-const scale = size => (width / guidelineBaseWidth) * size;
-const verticalScale = size => (height / guidelineBaseHeight) * size;
-const moderateScale = (size, factor = 0.5) =>
-  size + (scale(size) - size) * factor;
+// Function to calculate responsive height
+const setHeight = h => {
+  const screenHeight = height;
+  return PixelRatio.roundToNearestPixel((h * screenHeight) / 100);
+};
 
 const appStyle = {
   container: {
@@ -199,12 +170,8 @@ const appStyle = {
 };
 
 export {
-  scale,
-  verticalScale,
-  moderateScale,
-  memorizeDimensions,
-  height,
-  width,
+  setWidth,
+  setHeight,
   FONT_FAMILY,
   FONT_SIZE,
   COLORS,

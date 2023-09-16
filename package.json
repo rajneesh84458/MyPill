@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "codepush:android":"appcenter codepush release-react -a Rajneesh94/MyPill-App -d Development"
+    "codepush:android": "appcenter codepush release-react -a Rajneesh94/MyPill-App -d Development"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.12",
@@ -26,6 +26,7 @@
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-native": "^0.71.4",
+    "react-native-asset": "^2.1.1",
     "react-native-calendar-strip": "^2.2.6",
     "react-native-code-push": "^7.1.0",
     "react-native-image-crop-picker": "^0.39.0",

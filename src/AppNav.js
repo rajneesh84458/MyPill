@@ -1,12 +1,8 @@
 import React, {useContext} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
 import Profile from './Profile';
-
 import HomePage from './HomePage';
-
 import withCodePush from './components/hoc/codePush';
 import {navigationRef} from './components/RootNavigation';
 import RegisterScreen from './AuthScreen/RegisterScreen';
@@ -15,6 +11,8 @@ import {AuthContext} from './AuthContext';
 import {darkTheme, lightTheme} from './theme/themeFile';
 import AddPill from './components/AddPill';
 import EditProfile from './EditProfile';
+import {FONT_FAMILY} from './utilities/helper';
+import {COLORS} from './utilities/medicineTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,35 +62,29 @@ const AppStack = () => {
         component={Profile}
         options={{
           title: 'My Profile',
-          headerTitleStyle:{fontSize:16, fontFamily: 'Poppins-Regular',},
+          headerTitleStyle: {fontSize: 16, fontFamily: FONT_FAMILY.REGULAR},
           headerStyle: {
             backgroundColor: theme.backgroundColor,
-            borderBottomColor:'white',
-            borderBottomWidth:1,
-            
-            
+            borderBottomColor: COLORS.WHITE,
+            borderBottomWidth: 1,
           },
           headerTintColor: theme.textColor,
-          headerTitleAlign:'center'
-          
+          headerTitleAlign: 'center',
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="EditProfile"
         component={EditProfile}
         options={{
           title: 'Edit Profile',
-          headerTitleStyle:{fontSize:16, fontFamily: 'Poppins-Regular',},
+          headerTitleStyle: {fontSize: 16, fontFamily: FONT_FAMILY.REGULAR},
           headerStyle: {
             backgroundColor: theme.backgroundColor,
-            borderBottomColor:'white',
-            borderBottomWidth:1,
-            
-            
+            borderBottomColor: COLORS.WHITE,
+            borderBottomWidth: 1,
           },
           headerTintColor: theme.textColor,
-          headerTitleAlign:'center'
-          
+          headerTitleAlign: 'center',
         }}
       />
     </Stack.Navigator>
@@ -104,7 +96,6 @@ function AppNav() {
   return (
     <NavigationContainer ref={navigationRef}>
       {user ? <AppStack /> : <AuthStack />}
-      {/* <AuthStack /> */}
     </NavigationContainer>
   );
 }

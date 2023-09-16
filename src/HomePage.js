@@ -18,7 +18,7 @@ import firestore from '@react-native-firebase/firestore';
 import LoadingScreen from './components/LoadingScreen';
 import {useIsFocused} from '@react-navigation/native';
 import CustomText from './components/CustomText';
-import {FONT_FAMILY} from './utilities/helper';
+import {appStyle, FONT_FAMILY} from './utilities/helper';
 import CustomImage from './components/CustomImage';
 
 const HomePage = ({route, navigation}) => {
@@ -96,7 +96,6 @@ const HomePage = ({route, navigation}) => {
     <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
       <View
         style={{
-          // backgroundColor: theme.backgroundColor,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -105,18 +104,11 @@ const HomePage = ({route, navigation}) => {
         }}>
         <View>
           <CustomText
-            title="Hello, "
-            style={[styles.headerTextStyle, {color: theme.textColor}]}
-          />
-
-          <CustomText
-            title={user.displayName}
+            title={`${'Hi, '}${user.displayName}`}
             style={[styles.headerTextStyle, {color: theme.textColor}]}
           />
         </View>
-
         <TouchableOpacity
-          // onPress={() => setModalVisible(true)}
           onPress={() => navigation.navigate('Profile')}
           style={{
             justifyContent: 'center',
@@ -161,7 +153,7 @@ const HomePage = ({route, navigation}) => {
         <LoadingScreen />
       ) : filteredData.length > 0 ? (
         <FlatList
-          style={{flex: 1}}
+          style={appStyle.container}
           data={filteredData}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => {

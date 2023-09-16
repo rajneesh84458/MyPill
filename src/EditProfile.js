@@ -3,25 +3,25 @@ import {
   View,
   StyleSheet,
   Pressable,
-  Text,
   ToastAndroid,
   Platform,
+  ScrollView,
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import CustomButton from './components/CustomButton';
 import {COLORS} from './utilities/medicineTab';
-import Feather from 'react-native-vector-icons/Feather';
 import {darkStyles, lightStyles} from './theme/themeFile';
 import {AuthContext} from './AuthContext';
 import {launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-
 import LoadingScreen from './components/LoadingScreen';
 import CustomTextInput from './components/CustomTextInput';
-import {setWidth} from './components/globalDimension';
 import CustomImage from './components/CustomImage';
+import Icon, {IconType} from './components/IconComponent';
+import CustomText from './components/CustomText';
+import {appStyle, FONT_FAMILY, setWidth} from './utilities/helper';
 
 const EditProfile = () => {
   const [uploading, setUploading] = useState(false);
@@ -91,12 +91,7 @@ const EditProfile = () => {
         const uploadUri =
           Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         setUploading(true);
-
-        // setTransferred(0);
-
         const task = storage().ref(filename).putFile(uploadUri);
-
-        // set progress state
         task.on('state_changed', snapshot => {});
         try {
           await task;
@@ -117,7 +112,7 @@ const EditProfile = () => {
   };
 
   return (
-    <View style={[styles.container, currentStyles.container]}>
+    <ScrollView style={[appStyle.container, currentStyles.container]}>
       <View style={[styles.subHeader, currentStyles.container]}>
         <Pressable onPress={selectPhotoTapped}>
           <CustomImage
@@ -141,7 +136,8 @@ const EditProfile = () => {
               marginTop: -35,
               elevation: 5,
             }}>
-            <Feather
+            <Icon
+              type={IconType.Feather}
               name="camera"
               size={15}
               color={currentStyles.container.color}
@@ -154,28 +150,28 @@ const EditProfile = () => {
           ) : null}
         </Pressable>
       </View>
-
-      <Text style={[styles.headingStyle, currentStyles.text]}>
-        Your Information
-      </Text>
+      <CustomText
+        title="Your Information"
+        style={[styles.headingStyle, currentStyles.text]}
+      />
 
       <View style={[styles.inputContainer]}>
         <CustomTextInput
-          style={[styles.inputStyle, currentStyles.text]}
+          style={[styles.inputStyle]}
           value={userName}
           onChangeText={setUserName}
         />
       </View>
       <View style={[styles.inputContainer]}>
         <CustomTextInput
-          style={[styles.inputStyle, currentStyles.text]}
+          style={[styles.inputStyle]}
           value={mobile}
           onChangeText={setMobile}
         />
       </View>
       <View style={[styles.inputContainer]}>
         <CustomTextInput
-          style={[styles.inputStyle, currentStyles.text]}
+          style={[styles.inputStyle]}
           value={email}
           onChangeText={setEmail}
         />
@@ -187,19 +183,15 @@ const EditProfile = () => {
         buttonColor={COLORS.PRIMARY_COLOR}
         buttonStyle={{width: 300, alignSelf: 'center', marginTop: 50}}
       />
-    </View>
+    </ScrollView>
   );
 };
 
 export default EditProfile;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   subHeader: {
-    flex: 0.5,
-
+    marginVertical: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -219,14 +211,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingLeft: 10,
     borderRadius: 5,
-    fontFamily: 'Poppins-Regular',
-    backgroundColor: '#FFFFFF',
+    fontFamily: FONT_FAMILY.REGULAR,
+    backgroundColor: COLORS.WHITE,
   },
   headingStyle: {
     margin: 10,
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 20,
-    fontFamily: 'Poppins-Thin',
+    fontFamily: FONT_FAMILY.THIN,
   },
 });

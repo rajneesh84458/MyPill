@@ -4,7 +4,6 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import uuid from 'react-native-uuid';
 
-
 const handlePhotoClicker = setFilePath => {
   const options = {
     quality: 5.0,
@@ -121,21 +120,18 @@ const handleCameraPicker = async (type, setImageData) => {
   }
 };
 
-
-
-
-const saveDataToFirestore = async (data) => {
+const saveDataToFirestore = async data => {
   try {
     const currentUser = auth().currentUser;
-    console.log("current user",currentUser)
-    const response = await firestore().collection('userMedicine')
-  .add(data);
-    console.log('Data saved successfully to Firestore with ID:========', response);
+    console.log('current user', currentUser);
+    const response = await firestore().collection('userMedicine').add(data);
+    console.log(
+      'Data saved successfully to Firestore with ID:========',
+      response,
+    );
   } catch (error) {
     console.error('Error saving data to Firestore:', error);
   }
 };
 
-export {handlePhotoClicker, handleCameraPicker,saveDataToFirestore};
-
-
+export {handlePhotoClicker, handleCameraPicker, saveDataToFirestore};

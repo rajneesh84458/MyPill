@@ -10,20 +10,18 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import storage from '@react-native-firebase/storage';
 import {COLORS} from '../utilities/medicineTab';
 import CustomButton from '../components/CustomButton';
 import LoadingScreen from '../components/LoadingScreen';
-import {setHeight, setWidth} from '../components/globalDimension';
 import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
 import {launchImageLibrary} from 'react-native-image-picker';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomText from '../components/CustomText';
-import {FONT_FAMILY} from '../utilities/helper';
+import {appStyle, FONT_FAMILY, setHeight, setWidth} from '../utilities/helper';
 import CustomImage from '../components/CustomImage';
+import Icon, {IconType} from '../components/IconComponent';
 
 const RegisterScreen = ({navigation}) => {
   const [userName, setUserName] = useState('');
@@ -195,12 +193,7 @@ const RegisterScreen = ({navigation}) => {
         const uploadUri =
           Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         setUploading(true);
-
-        // setTransferred(0);
-
         const task = storage().ref(filename).putFile(uploadUri);
-
-        // set progress state
         task.on('state_changed', snapshot => {});
         try {
           await task;
@@ -221,8 +214,6 @@ const RegisterScreen = ({navigation}) => {
   };
 
   const showImage = () => {
-    console.log('+++++++++=', filePath);
-
     return (
       <CustomImage
         source={{
@@ -242,7 +233,7 @@ const RegisterScreen = ({navigation}) => {
 
   return (
     <SafeAreaView
-      style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+      style={[appStyle.container, {backgroundColor: theme.backgroundColor}]}>
       <ScrollView keyboardShouldPersistTaps="handled">
         <View
           style={{
@@ -252,23 +243,15 @@ const RegisterScreen = ({navigation}) => {
             backgroundColor: theme.backgroundColor,
           }}>
           <TouchableOpacity
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              borderColor: theme.borderColor,
-              borderWidth: 0.8,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+            style={[styles.imgContainer, {borderColor: theme.borderColor}]}
             onPress={selectPhotoTapped}>
             {showImage()}
           </TouchableOpacity>
 
           {uploading ? (
-            <View style={{}}>
+            <>
               <LoadingScreen />
-            </View>
+            </>
           ) : (
             <View
               style={{
@@ -277,7 +260,7 @@ const RegisterScreen = ({navigation}) => {
                 alignItems: 'center',
               }}>
               <CustomText
-                title=" Add Picture"
+                title="Add Picture"
                 style={{
                   fontSize: 14,
                   color: theme.textColor,
@@ -305,7 +288,8 @@ const RegisterScreen = ({navigation}) => {
               }
               blurOnSubmit={false}
             />
-            <FontAwesome
+            <Icon
+              type={IconType.FontAwesome}
               style={styles.touachableButton}
               name="user"
               size={20}
@@ -325,7 +309,8 @@ const RegisterScreen = ({navigation}) => {
               returnKeyType="next"
               blurOnSubmit={false}
             />
-            <Ionicons
+            <Icon
+              type={IconType.Ionicons}
               style={styles.touachableButton}
               name="call"
               size={20}
@@ -348,7 +333,8 @@ const RegisterScreen = ({navigation}) => {
               }
               blurOnSubmit={false}
             />
-            <Ionicons
+            <Icon
+              type={IconType.Ionicons}
               style={styles.touachableButton}
               name="mail"
               size={20}
@@ -373,9 +359,15 @@ const RegisterScreen = ({navigation}) => {
               style={styles.touachableButton}
               onPress={setPasswordVisibility}>
               {showVisiblity ? (
-                <Ionicons name="eye" size={20} color={COLORS.PRIMARY_COLOR} />
+                <Icon
+                  type={IconType.Ionicons}
+                  name="eye"
+                  size={20}
+                  color={COLORS.PRIMARY_COLOR}
+                />
               ) : (
-                <Ionicons
+                <Icon
+                  type={IconType.Ionicons}
                   name="eye-off"
                   size={20}
                   color={COLORS.PRIMARY_COLOR}
@@ -401,9 +393,15 @@ const RegisterScreen = ({navigation}) => {
               style={styles.touachableButton}
               onPress={setConfirmPasswordVisible}>
               {showVisiblityConfirm ? (
-                <Ionicons name="eye" size={20} color={COLORS.PRIMARY_COLOR} />
+                <Icon
+                  type={IconType.Ionicons}
+                  name="eye"
+                  size={20}
+                  color={COLORS.PRIMARY_COLOR}
+                />
               ) : (
-                <Ionicons
+                <Icon
+                  type={IconType.Ionicons}
                   name="eye-off"
                   size={20}
                   color={COLORS.PRIMARY_COLOR}
@@ -411,7 +409,7 @@ const RegisterScreen = ({navigation}) => {
               )}
             </TouchableOpacity>
           </View>
-          {errortext != '' ? (
+          {errortext !== '' ? (
             <CustomText title={errortext} style={styles.errorTextStyle} />
           ) : null}
 
@@ -446,23 +444,19 @@ const RegisterScreen = ({navigation}) => {
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   sectionStyle: {
     marginBottom: 15,
     marginLeft: 35,
     marginRight: 35,
-
     alignItems: 'center',
     justifyContent: 'center',
   },
   inputStyle: {
     width: setWidth(90),
-    color: '#000',
+    color: COLORS.BLACK,
     paddingLeft: 15,
     paddingRight: 15,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: FONT_FAMILY.REGULAR,
     borderRadius: 10,
     backgroundColor: COLORS.LIGHT_BLUE,
   },
@@ -470,7 +464,7 @@ const styles = StyleSheet.create({
     color: COLORS.RED,
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: FONT_FAMILY.REGULAR,
   },
   touachableButton: {
     position: 'absolute',
@@ -482,5 +476,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     height: 20,
     width: 20,
+  },
+  imgContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 0.8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

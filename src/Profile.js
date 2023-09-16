@@ -1,10 +1,15 @@
-import {Pressable, StyleSheet, View, Alert, Switch} from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  Alert,
+  Switch,
+  ToastAndroid,
+} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {COLORS} from './utilities/medicineTab';
 import {AuthContext} from './AuthContext';
 import ImagePicker from 'react-native-image-crop-picker';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
   darkStyles,
   darkTheme,
@@ -12,9 +17,11 @@ import {
   lightTheme,
 } from './theme/themeFile';
 import CustomButton from './components/CustomButton';
-import Feather from 'react-native-vector-icons/Feather';
 import CustomText from './components/CustomText';
 import CustomImage from './components/CustomImage';
+import Icon, {IconType} from './components/IconComponent';
+import {appStyle, FONT_FAMILY, setWidth} from './utilities/helper';
+
 const Profile = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
   const {user, signOut, isDarkTheme, toggleTheme} = useContext(AuthContext);
@@ -30,8 +37,7 @@ const Profile = ({navigation}) => {
       cropping: true,
     })
       .then(image => {
-        console.log(image.path);
-        setImageUri(image.path);
+        setImageUri(image?.path);
       })
       .catch(e => Alert.alert(title, e.message));
   };
@@ -49,87 +55,61 @@ const Profile = ({navigation}) => {
   const toggleSwitch = () =>
     setIsEnabled(previousState => !previousState, toggleTheme());
 
+  const addedSoon = () => {
+    ToastAndroid.show('Added Soon', ToastAndroid.SHORT);
+  };
+
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <View
+      style={[appStyle.container, {backgroundColor: theme.backgroundColor}]}>
       <View
         style={[
           styles.headerStyle,
           {borderBottomColor: theme.borderBottomCOlor, borderBottomWidth: 0.2},
         ]}>
-        {/* profile  */}
-
-        <Pressable
-          onPress={takeImage}
-          style={{
-            marginTop: 10,
-            // padding: 2,
-            width: 140,
-            height: 140,
-            borderRadius: 70,
-            backgroundColor: '#f4f4f4',
-          }}>
+        <Pressable onPress={takeImage} style={styles.imgContainer}>
           <CustomImage
             source={{
-              uri: imageUri ? imageUri : user?.photoURL,
+              uri: imageUri || user?.photoURL,
             }}
-            style={{
-              width: 140,
-              height: 140,
-              borderRadius: 70,
-              resizeMode: 'cover',
-            }}
+            style={styles.img}
           />
           <View
-            style={{
-              width: 40,
-              height: 40,
-              backgroundColor: currentStyles.container.backgroundColor,
-              justifyContent: 'center',
-              alignItems: 'center',
-
-              borderRadius: 20,
-              marginLeft: 90,
-              marginTop: -30,
-              elevation: 5,
-            }}>
-            <Feather
+            style={[
+              styles.camerContainer,
+              {backgroundColor: currentStyles.container.backgroundColor},
+            ]}>
+            <Icon
+              type={IconType.Feather}
               name="camera"
               size={15}
               color={currentStyles.container.color}
             />
           </View>
         </Pressable>
-
-        <View style={{height: 120, padding: 10}}>
-          {/* email   */}
-          <View>
-            <CustomText
-              title={user.displayName}
-              style={[
-                styles.stripTextStyle,
-                {fontWeight: 'bold', fontSize: 20},
-                {color: theme.textColor},
-              ]}
-            />
-            <CustomText
-              title={user.email}
-              style={[styles.stripTextStyle, {color: theme.textColor}]}
-            />
-            <CustomButton
-              onPress={() => navigation.navigate('EditProfile')}
-              title="Edit Profile"
-              buttonColor={COLORS.PRIMARY_COLOR}
-              buttonStyle={{
-                width: 140,
-                marginTop: 20,
-                borderRadius: 10,
-              }}
-            />
-          </View>
+        <View style={{padding: 10}}>
+          <CustomText
+            title={user.displayName}
+            style={[
+              styles.stripTextStyle,
+              {fontFamily: FONT_FAMILY.BOLD, fontSize: 20},
+              {color: theme.textColor},
+            ]}
+          />
+          <CustomText
+            title={user.email}
+            style={[styles.stripTextStyle, {color: theme.textColor}]}
+          />
+          <CustomButton
+            onPress={() => navigation.navigate('EditProfile')}
+            title="Edit Profile"
+            buttonColor={COLORS.PRIMARY_COLOR}
+            buttonStyle={styles.btn}
+          />
         </View>
       </View>
 
-      <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
+      <Pressable onPress={addedSoon} style={styles.stripStyle}>
         <CustomText
           title="DarkMode"
           style={[styles.stripTextStyle, {color: theme.textColor}]}
@@ -146,25 +126,27 @@ const Profile = ({navigation}) => {
           value={isEnabled}
         />
       </Pressable>
-      <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
+      <Pressable onPress={addedSoon} style={styles.stripStyle}>
         <CustomText
           title="Language"
           style={[styles.stripTextStyle, {color: theme.textColor}]}
         />
-        <FontAwesome
+        <Icon
+          type={IconType.FontAwesome}
           name="angle-right"
-          size={20}
+          size={30}
           color={COLORS.PRIMARY_COLOR}
         />
       </Pressable>
-      <Pressable onPress={() => alert('Added soon')} style={styles.stripStyle}>
+      <Pressable onPress={addedSoon} style={styles.stripStyle}>
         <CustomText
           title="Progress"
           style={[styles.stripTextStyle, {color: theme.textColor}]}
         />
-        <FontAwesome
+        <Icon
+          type={IconType.FontAwesome}
           name="angle-right"
-          size={20}
+          size={30}
           color={COLORS.PRIMARY_COLOR}
         />
       </Pressable>
@@ -173,16 +155,18 @@ const Profile = ({navigation}) => {
           title="Log out"
           style={[styles.stripTextStyle, {color: theme.textColor}]}
         />
-        <SimpleLineIcons name="logout" size={20} color={COLORS.PRIMARY_COLOR} />
+        <Icon
+          type={IconType.MaterialCommunityIcons}
+          name="logout"
+          size={30}
+          color={COLORS.PRIMARY_COLOR}
+        />
       </Pressable>
     </View>
   );
 };
 export default Profile;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   headerStyle: {
     flex: 0.5,
     flexDirection: 'row',
@@ -204,13 +188,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
-    // backgroundColor: 'red',
     margin: 5,
     padding: 10,
   },
   stripTextStyle: {
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
-    marginVertical: 5,
+  },
+  imgContainer: {
+    marginTop: 10,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: '#f4f4f4',
+  },
+  img: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    resizeMode: 'cover',
+  },
+  camerContainer: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    marginLeft: 90,
+    marginTop: -30,
+    elevation: 5,
+  },
+  btn: {
+    width: setWidth(50),
+    marginTop: 20,
+    borderRadius: 10,
   },
 });

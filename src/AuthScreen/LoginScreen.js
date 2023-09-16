@@ -1,28 +1,24 @@
 import React, {useContext, useState} from 'react';
 import {
   View,
-  Image,
   StyleSheet,
   KeyboardAvoidingView,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import CustomButton from '../components/CustomButton';
 import {COLORS} from '../utilities/medicineTab';
-import {setHeight, setWidth} from '../components/globalDimension';
 import {AuthContext} from '../AuthContext';
 import {darkTheme, lightTheme} from '../theme/themeFile';
 import LoadingScreen from '../components/LoadingScreen';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomText from '../components/CustomText';
-import {FONT_FAMILY} from '../utilities/helper';
+import {FONT_FAMILY, setHeight, setWidth} from '../utilities/helper';
 import CustomImage from '../components/CustomImage';
+import Icon, {IconType} from '../components/IconComponent';
 
 export default function LoginScreen({navigation}) {
-  const [email, setEmail] = useState('arun@test.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showVisiblity, setShowVisiblity] = useState(false);
   const [errortext, setErrortext] = useState('');
 
@@ -73,7 +69,8 @@ export default function LoginScreen({navigation}) {
             onChangeText={setEmail}
             style={{color: theme.textColor}}
           />
-          <Ionicons
+          <Icon
+            type={IconType.Ionicons}
             style={styles.touachableButton}
             name="mail"
             size={20}
@@ -99,9 +96,19 @@ export default function LoginScreen({navigation}) {
             style={styles.touachableButton}
             onPress={setPasswordVisibility}>
             {showVisiblity ? (
-              <Ionicons name="eye" size={20} color={COLORS.PRIMARY_COLOR} />
+              <Icon
+                type={IconType.Ionicons}
+                name="eye-off"
+                size={20}
+                color={COLORS.PRIMARY_COLOR}
+              />
             ) : (
-              <Ionicons name="eye-off" size={20} color={COLORS.PRIMARY_COLOR} />
+              <Icon
+                type={IconType.Ionicons}
+                name="eye"
+                size={20}
+                color={COLORS.PRIMARY_COLOR}
+              />
             )}
           </TouchableOpacity>
         </View>
@@ -121,9 +128,8 @@ export default function LoginScreen({navigation}) {
             <CustomButton
               buttonColor={COLORS.PRIMARY_COLOR}
               buttonStyle={{
-                width: '80%',
+                width: setWidth(90),
                 alignSelf: 'center',
-
                 borderRadius: 6,
                 marginBottom: 20,
               }}
@@ -133,21 +139,19 @@ export default function LoginScreen({navigation}) {
             />
           </View>
         )}
-        <Pressable onPress={() => navigation.navigate('Register')}>
-          <CustomText
-            title="New to app?"
-            style={{
-              textAlign: 'center',
-              marginTop: 20,
-              fontFamily: FONT_FAMILY.REGULAR,
-              color: theme.textColor,
-            }}>
-            <CustomText
-              title="Register"
-              style={[{fontFamily: FONT_FAMILY.BOLD, color: theme.textColor}]}
-            />
-          </CustomText>
-        </Pressable>
+
+        <CustomButton
+          buttonColor={COLORS.PRIMARY_COLOR}
+          buttonStyle={{
+            width: setWidth(90),
+            alignSelf: 'center',
+            borderRadius: 6,
+            marginBottom: 20,
+          }}
+          onPress={() => navigation.navigate('Register')}
+          textStyle={{fontSize: 20}}
+          title="Register"
+        />
       </KeyboardAvoidingView>
     </View>
   );
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
     height: setHeight(40),
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.WHITE,
   },
 
   sectionStyle: {
@@ -189,7 +193,7 @@ const styles = StyleSheet.create({
     color: '#000',
     paddingLeft: 15,
     paddingRight: 15,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: FONT_FAMILY.REGULAR,
     borderRadius: 10,
     backgroundColor: 'rgba(82,107,242,0.1)',
   },
@@ -197,11 +201,10 @@ const styles = StyleSheet.create({
     color: COLORS.RED,
     textAlign: 'center',
     fontSize: 14,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: FONT_FAMILY.REGULAR,
   },
   touachableButton: {
     position: 'absolute',
-
     right: 10,
     height: 20,
     width: 20,
