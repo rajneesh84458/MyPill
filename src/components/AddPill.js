@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  ActivityIndicator,
   Platform,
 } from 'react-native';
 import React, {useState, useEffect, useContext} from 'react';
@@ -28,7 +27,11 @@ import {saveDataToFirestore} from '../globalFunction/globalFile';
 import CustomTextInput from './CustomTextInput';
 import CustomText from './CustomText';
 import CustomImage from './CustomImage';
+import LoadingScreen from './LoadingScreen';
+import {appStyle, setHeight, setWidth} from '../utilities/helper';
+import Icon, {IconType} from './IconComponent';
 
+const DUMMY_IMAGE = 'https://cdn-icons-png.flaticon.com/512/807/807165.png';
 const AddPill = ({navigation}) => {
   const [imageUri, setImageUri] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -116,18 +119,15 @@ const AddPill = ({navigation}) => {
   // };
 
   const handleScheduleNotify = () => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS === 'android') {
       PushNotification.localNotificationSchedule({
         channelId: 'default',
         title: pillName,
         message: `Hello ${user.displayName} This is your Medicine Time`,
-        picture:
-          imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
+        picture: imageUri || DUMMY_IMAGE,
         date: new Date(selectedDate),
         smallIcon: pillImage,
-
         allowWhileIdle: true,
-
         repeatType: 'day',
         timeStatus: timeStatus,
         repeatTime: 1,
@@ -136,8 +136,6 @@ const AddPill = ({navigation}) => {
     } else {
       console.log('ios platform');
     }
-
-    console.log('first', selectedDate);
   };
 
   const cancelNotifications = () => {
@@ -167,10 +165,8 @@ const AddPill = ({navigation}) => {
       foodStatus: foodStatus,
       timeStatus: timeStatus,
       pillType: pillType,
-      pillImage:
-        pillImage || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
-      choosenImage:
-        imageUri || 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
+      pillImage: pillImage || DUMMY_IMAGE,
+      choosenImage: imageUri || DUMMY_IMAGE,
       notificationDate: chosenDate,
       day: weekday,
       notifyTime: chosenTime,
@@ -192,7 +188,6 @@ const AddPill = ({navigation}) => {
 
   const handleConfirm = date => {
     setSelectedDate(date);
-
     hideDatePicker();
   };
 
@@ -200,67 +195,36 @@ const AddPill = ({navigation}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
-      <TouchableOpacity
-        style={{margin: 20}}
-        onPress={() => navigation.goBack()}>
-        <CustomImage
-          source={{
-            uri: 'https://cdn-icons-png.flaticon.com/512/130/130882.png',
-          }}
-          style={{
-            width: 20,
-            height: 20,
-            resizeMode: 'cover',
-            tintColor: theme.borderColor,
-          }}
-        />
-      </TouchableOpacity>
+      style={[appStyle.container, {backgroundColor: theme.backgroundColor}]}>
+      <Icon
+        onPress={() => navigation.goBack()}
+        name="chevron-back"
+        size={30}
+        color={theme.borderColor}
+        type={IconType.Ionicons}
+        style={{padding: 10}}
+      />
       <View
         style={{
-          // backgroundColor: 'red',
           justifyContent: 'center',
           alignItems: 'center',
-
-          // padding: 10,
         }}>
-        <TouchableOpacity
-          onPress={takeImage}
-          style={{
-            width: 90,
-            height: 90,
-            borderRadius: 45,
-            borderColor: '#f4f4f4',
-            borderWidth: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <TouchableOpacity onPress={takeImage} style={styles.imgContainer}>
           <CustomImage
             source={{
-              uri: imageUri
-                ? imageUri
-                : 'https://cdn-icons-png.flaticon.com/512/807/807165.png',
+              uri: imageUri || DUMMY_IMAGE,
             }}
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: 40,
-              resizeMode: 'contain',
-            }}
+            style={styles.img}
           />
         </TouchableOpacity>
         <CustomText
           title="Add you medicine photo"
-          style={{
-            fontSize: 14,
-            marginVertical: 5,
-            color: theme.textColor,
-          }}
+          style={[styles.title, {color: theme.textColor}]}
         />
       </View>
-      <View style={{height: 100, marginTop: 20}}>
+      <View style={{height: setHeight(10), marginTop: 20}}>
         <CustomText
-          title=" Enter the name of your medicine"
+          title="Enter the name of your medicine"
           style={[styles.headingStyle, {color: theme.textColor}]}
         />
         <CustomTextInput
@@ -276,9 +240,9 @@ const AddPill = ({navigation}) => {
       </View>
 
       {/* food and Pills */}
-      <View style={{height: 120}}>
+      <View style={{height: setHeight(15)}}>
         <CustomText
-          title=" When would you take your dose ?"
+          title="When would you take your dose ?"
           style={[styles.headingStyle, {color: theme.textColor}]}
         />
         <ScrollView
@@ -296,7 +260,7 @@ const AddPill = ({navigation}) => {
                     backgroundColor:
                       foodStatus === item.intake
                         ? COLORS.PRIMARY_COLOR
-                        : '#f4f4f4',
+                        : COLORS.GREY,
                   },
                 ]}>
                 <CustomText
@@ -315,7 +279,7 @@ const AddPill = ({navigation}) => {
       </View>
       <View>
         <CustomText
-          title=" Choose a medicine form"
+          title="Choose a medicine form"
           style={[styles.headingStyle, {color: theme.textColor}]}
         />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -331,7 +295,7 @@ const AddPill = ({navigation}) => {
                     backgroundColor:
                       pillType === item.tabLabel
                         ? COLORS.PRIMARY_COLOR
-                        : '#f4f4f4',
+                        : COLORS.GREY,
                     marginLeft: 10,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -368,20 +332,19 @@ const AddPill = ({navigation}) => {
         title="Choose a desired Time"
         style={[styles.headingStyle, {color: theme.textColor}]}
       />
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{}}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {timeOfDay.map(item => {
           return (
             <Pressable
               key={item.id}
               onPress={() => selectTimeStatus(item)}
-              // onPress={() => alert(item.intakeTime)}
               style={[
                 styles.foodPillStyle,
                 {
                   backgroundColor:
                     timeStatus === item.intakeTime
                       ? COLORS.PRIMARY_COLOR
-                      : '#f4f4f4',
+                      : COLORS.GREY,
                 },
               ]}>
               <CustomText
@@ -407,36 +370,22 @@ const AddPill = ({navigation}) => {
         onCancel={hideDatePicker}
       />
 
-      <View style={{height: 120}}>
+      <View style={{height: setHeight(15)}}>
         <CustomText
-          title=" Notification"
+          title="Notification"
           style={[styles.headingStyle, {color: theme.textColor}]}
         />
         <View
           style={{
-            flex: 1,
             flexDirection: 'row',
+            justifyContent: 'flex-end',
           }}>
-          <Pressable
-            style={{
-              margin: 10,
-              flexDirection: 'row',
-              // width: 200,
-              height: 60,
-              backgroundColor: '#f4f4f4',
-              alignItems: 'center',
-              paddingHorizontal: 10,
-            }}>
-            <CustomImage
-              source={{
-                uri: 'https://cdn-icons-png.flaticon.com/512/3602/3602123.png',
-              }}
-              style={{
-                width: 20,
-                height: 20,
-                resizeMode: 'cover',
-                marginLeft: 5,
-              }}
+          <Pressable style={styles.timeStyle}>
+            <Icon
+              name="notifications"
+              type={IconType.Ionicons}
+              size={26}
+              color={COLORS.BLACK}
             />
 
             <CustomText
@@ -448,39 +397,16 @@ const AddPill = ({navigation}) => {
               style={{textAlign: 'right', paddingLeft: 30}}
             />
           </Pressable>
-
-          <Pressable
-            onPress={showDatePicker}
-            style={{
-              width: 60,
-              height: 60,
-              backgroundColor: '#f4f4f4',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 10,
-              marginRight: 10,
-            }}>
+          <Pressable onPress={showDatePicker} style={styles.plusBtn}>
             <CustomText title="+" style={{fontSize: 20}} />
           </Pressable>
         </View>
       </View>
-
-      {!dumyLoading && (
-        <ActivityIndicator size="small" color={COLORS.PRIMARY_COLOR} />
-      )}
-
+      {!dumyLoading && <LoadingScreen />}
       <CustomButton
         buttonColor={COLORS.PRIMARY_COLOR}
-        // titleColor="#000"
         title="Add Remainder"
-        buttonStyle={{
-          width: '80%',
-          alignSelf: 'center',
-          // borderWidth: 1,
-          // borderColor: '#1c1c1c',
-          borderRadius: 6,
-          marginBottom: 20,
-        }}
+        buttonStyle={styles.addBtn}
         onPress={callingSometime}
         textStyle={{fontSize: 20}}
       />
@@ -491,14 +417,11 @@ const AddPill = ({navigation}) => {
 export default AddPill;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   amountContainer: {
     width: 120,
     height: 30,
     borderRadius: 2,
-    backgroundColor: '#f4f4f4',
+    backgroundColor: COLORS.GREY,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -517,20 +440,8 @@ const styles = StyleSheet.create({
   backButtonStyle: {
     width: 50,
     height: 40,
-
     justifyContent: 'center',
-
     margin: 20,
-  },
-  pilltabStyle: {
-    width: '95%',
-    height: 40,
-    backgroundColor: '#f4f4f4',
-    marginLeft: 10,
-    fontSize: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 10,
   },
   foodPillStyle: {
     width: 100,
@@ -539,16 +450,56 @@ const styles = StyleSheet.create({
     backgroundColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
-    // borderWidth: 1,
     marginTop: 10,
     marginHorizontal: 5,
-    // borderColor: COLORS.PRIMARY_COLOR,
   },
-
   tabbarContainer: {
     flexDirection: 'row',
   },
   tabText: {
     fontSize: 14,
+  },
+  plusBtn: {
+    width: 60,
+    height: 60,
+    backgroundColor: COLORS.GREY,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    marginRight: 10,
+  },
+  timeStyle: {
+    margin: 10,
+    flexDirection: 'row',
+    height: 60,
+    backgroundColor: COLORS.GREY,
+    alignItems: 'center',
+    width: setWidth(75),
+    paddingHorizontal: 10,
+  },
+  imgContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderColor: '#f4f4f4',
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  img: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    resizeMode: 'contain',
+  },
+  addBtn: {
+    width: setWidth(85),
+    alignSelf: 'center',
+    borderRadius: 6,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 14,
+    marginVertical: 5,
   },
 });

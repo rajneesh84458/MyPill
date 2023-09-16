@@ -419,22 +419,19 @@ const RegisterScreen = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            {isLoading ? (
-              <LoadingScreen />
-            ) : (
-              <CustomButton
-                buttonColor={COLORS.PRIMARY_COLOR}
-                buttonStyle={{
-                  width: '80%',
-                  alignSelf: 'center',
-                  borderRadius: 6,
-                  marginBottom: 20,
-                }}
-                onPress={handleRegister}
-                textStyle={{fontSize: 20}}
-                title="Register"
-              />
-            )}
+            {isLoading && <LoadingScreen />}
+            <CustomButton
+              buttonColor={COLORS.PRIMARY_COLOR}
+              buttonStyle={{
+                width: '80%',
+                alignSelf: 'center',
+                borderRadius: 6,
+                marginBottom: 20,
+              }}
+              onPress={handleRegister}
+              textStyle={{fontSize: 20}}
+              title="Register"
+            />
           </View>
         </KeyboardAvoidingView>
       </ScrollView>

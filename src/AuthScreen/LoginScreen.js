@@ -12,7 +12,7 @@ import {darkTheme, lightTheme} from '../theme/themeFile';
 import LoadingScreen from '../components/LoadingScreen';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomText from '../components/CustomText';
-import {FONT_FAMILY, setHeight, setWidth} from '../utilities/helper';
+import {appStyle, FONT_FAMILY, setHeight, setWidth} from '../utilities/helper';
 import CustomImage from '../components/CustomImage';
 import Icon, {IconType} from '../components/IconComponent';
 
@@ -43,7 +43,8 @@ export default function LoginScreen({navigation}) {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+    <View
+      style={[appStyle.container, {backgroundColor: theme.backgroundColor}]}>
       <KeyboardAvoidingView behavior="position">
         <View style={[styles.box1, {backgroundColor: theme.backgroundColor}]}>
           <CustomImage
@@ -116,37 +117,31 @@ export default function LoginScreen({navigation}) {
           title={errortext}
           style={{color: COLORS.RED, textAlign: 'center'}}
         />
-        {isLoading ? (
-          <LoadingScreen />
-        ) : (
-          <View
-            style={{
-              height: setHeight(10),
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <CustomButton
-              buttonColor={COLORS.PRIMARY_COLOR}
-              buttonStyle={{
-                width: setWidth(90),
-                alignSelf: 'center',
-                borderRadius: 6,
-                marginBottom: 20,
-              }}
-              onPress={handleLogin}
-              textStyle={{fontSize: 20}}
-              title="Login"
-            />
-          </View>
-        )}
-
+        {isLoading && <LoadingScreen />}
+        <View
+          style={{
+            height: setHeight(10),
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <CustomButton
+            buttonColor={COLORS.PRIMARY_COLOR}
+            buttonStyle={{
+              width: setWidth(90),
+              alignSelf: 'center',
+              borderRadius: 6,
+            }}
+            onPress={handleLogin}
+            textStyle={{fontSize: 20}}
+            title="Login"
+          />
+        </View>
         <CustomButton
           buttonColor={COLORS.PRIMARY_COLOR}
           buttonStyle={{
             width: setWidth(90),
             alignSelf: 'center',
             borderRadius: 6,
-            marginBottom: 20,
           }}
           onPress={() => navigation.navigate('Register')}
           textStyle={{fontSize: 20}}
@@ -158,9 +153,6 @@ export default function LoginScreen({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   text: {
     fontSize: 20,
     color: COLORS.PRIMARY_COLOR,

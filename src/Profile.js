@@ -109,7 +109,7 @@ const Profile = ({navigation}) => {
         </View>
       </View>
 
-      <Pressable onPress={addedSoon} style={styles.stripStyle}>
+      <Pressable style={styles.stripStyle}>
         <CustomText
           title="DarkMode"
           style={[styles.stripTextStyle, {color: theme.textColor}]}
